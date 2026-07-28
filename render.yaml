@@ -8,6 +8,8 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
       # Set this to your deployed frontend URL after the first deploy
       - key: ALLOWED_ORIGINS
         value: https://gitrep.onrender.com
