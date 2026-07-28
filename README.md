@@ -1,63 +1,74 @@
 # GitHub Repo Analyzer 🚀
 
-This project is a full-stack web application that analyzes GitHub repositories using Natural Language Processing (NLP) techniques to assess the quality and content of README files.
+A full-stack web app that analyzes any public GitHub repository and gives instant, actionable feedback on its README and overall presentation — with a quality score out of 100.
 
 ## 🔍 Features
 
-- 🔗 Submit any GitHub repo URL
-- 📄 Automatically scrapes README and metadata
-- 🧠 Analyzes content using an NLP model
-- 📊 Returns feedback and suggestions on README quality
-
----
+- 🔗 Paste any public GitHub repo URL
+- 📄 Fetches repo metadata and the README via the GitHub API (works with any default branch)
+- 📊 Scores README quality and repo presentation out of 100
+- 💡 Concrete suggestions: missing installation steps, license, screenshots, topics, staleness, and more
 
 ## 🧱 Tech Stack
 
-### 🖥️ Frontend
-- **React** (with **Vite**)
-- JavaScript
-- Fetch API for backend communication
+- **Frontend:** React 19 + Vite
+- **Backend:** FastAPI (Python 3.10+)
 
-### ⚙️ Backend
-- **FastAPI**
-- Python
-- NLP libraries (e.g., spaCy, transformers)
+## 📌 Running Locally
 
----
+### 1. Clone the repo
 
-## 📈 Data Flow
-
-1. **User inputs** GitHub repo URL in frontend
-2. **Frontend** sends POST request to FastAPI backend
-3. **Backend** scrapes the README and project metadata
-4. **NLP model** analyzes the content
-5. **Result** is returned and displayed in the frontend
-
----
-
-## 🧪 Use Cases
-
-- Developers polishing GitHub portfolios
-- Career coaches/mentors giving feedback
-- Recruiters screening technical profiles
-- Colleges evaluating project submissions
-- Hackathons for auto-evaluation
-
----
-
-## 🚧 Project Status
-
-- [x] Backend with scraping + NLP
-- [x] React frontend with input + display
-- [ ] README improvement suggestions (Coming soon!)
-- [ ] Resume comparison (Future Work)
-- [ ] Deployment (Upcoming)
-
----
-
-## 📌 How to Run Locally
-
-### 1. Clone the Repo
 ```bash
 git clone https://github.com/SamGabriel-Here/Github-Repo-Analyzer.git
 cd Github-Repo-Analyzer
+```
+
+### 2. Start the backend
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+The API runs at `http://localhost:8000` (interactive docs at `/docs`).
+
+### 3. Start the frontend
+
+In a second terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` and paste a repo URL.
+
+## ⚙️ Configuration
+
+All optional, via environment variables:
+
+| Variable | Where | Default | Purpose |
+|---|---|---|---|
+| `GITHUB_TOKEN` | backend | – | GitHub personal access token; raises the API rate limit from 60 to 5,000 requests/hour |
+| `ALLOWED_ORIGINS` | backend | `http://localhost:5173` | Comma-separated list of allowed frontend origins (CORS) |
+| `VITE_API_URL` | frontend | `http://localhost:8000` | Backend URL the frontend calls |
+
+## 🧪 Use Cases
+
+- Developers polishing their GitHub portfolios
+- Mentors and career coaches giving structured feedback
+- Hackathons or classes doing quick project reviews
+
+## 🗺️ Roadmap
+
+- [ ] Deeper README analysis (structure, tone, completeness)
+- [ ] Analyze all repos on a profile at once
+- [ ] Public deployment
+
+## 📄 License
+
+MIT
