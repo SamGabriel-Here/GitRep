@@ -1,7 +1,7 @@
 services:
   # FastAPI backend
   - type: web
-    name: repo-analyzer-api
+    name: gitrep-api
     runtime: python
     plan: free
     rootDir: backend
@@ -10,11 +10,11 @@ services:
     envVars:
       # Set this to your deployed frontend URL after the first deploy
       - key: ALLOWED_ORIGINS
-        value: https://repo-analyzer-frontend.onrender.com
+        value: https://gitrep.onrender.com
 
   # React frontend (static site)
   - type: web
-    name: repo-analyzer-frontend
+    name: gitrep
     runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
@@ -22,4 +22,4 @@ services:
     envVars:
       # Set this to your deployed backend URL after the first deploy
       - key: VITE_API_URL
-        value: https://repo-analyzer-api.onrender.com
+        value: https://gitrep-api.onrender.com

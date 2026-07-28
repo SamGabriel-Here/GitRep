@@ -1,4 +1,4 @@
-# GitHub Repo Analyzer 🚀
+# GitRep 🚀
 
 A full-stack web app that analyzes any public GitHub repository and gives instant, actionable feedback on its README and overall presentation — with a quality score out of 100.
 
@@ -19,8 +19,8 @@ A full-stack web app that analyzes any public GitHub repository and gives instan
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/SamGabriel-Here/Github-Repo-Analyzer.git
-cd Github-Repo-Analyzer
+git clone https://github.com/SamGabriel-Here/GitRep.git
+cd GitRep
 ```
 
 ### 2. Start the backend

@@ -50,7 +50,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>GitHub Repo Analyzer</h1>
+        <h1>GitRep</h1>
         <p>Get instant feedback on any public GitHub repository.</p>
       </header>
 

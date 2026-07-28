@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from github_scraper import GitHubError, fetch_github_data
 
-app = FastAPI(title="GitHub Repo Analyzer")
+app = FastAPI(title="GitRep")
 
 # Comma-separated list of allowed frontend origins, e.g.
 # ALLOWED_ORIGINS="http://localhost:5173,https://myapp.example.com"
