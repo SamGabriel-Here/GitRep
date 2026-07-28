@@ -10,9 +10,9 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.10
-      # Set this to your deployed frontend URL after the first deploy
+      # The deployed frontend URL (Render appended a suffix since "gitrep" was taken)
       - key: ALLOWED_ORIGINS
-        value: https://gitrep.onrender.com
+        value: https://gitrep-ov16.onrender.com
 
   # React frontend (static site)
   - type: web
