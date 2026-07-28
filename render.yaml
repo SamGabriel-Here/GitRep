@@ -1,0 +1,25 @@
+services:
+  # FastAPI backend
+  - type: web
+    name: repo-analyzer-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Set this to your deployed frontend URL after the first deploy
+      - key: ALLOWED_ORIGINS
+        value: https://repo-analyzer-frontend.onrender.com
+
+  # React frontend (static site)
+  - type: web
+    name: repo-analyzer-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Set this to your deployed backend URL after the first deploy
+      - key: VITE_API_URL
+        value: https://repo-analyzer-api.onrender.com

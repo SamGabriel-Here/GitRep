@@ -57,6 +57,18 @@ All optional, via environment variables:
 | `ALLOWED_ORIGINS` | backend | `http://localhost:5173` | Comma-separated list of allowed frontend origins (CORS) |
 | `VITE_API_URL` | frontend | `http://localhost:8000` | Backend URL the frontend calls |
 
+## 🚀 Deployment
+
+The repo includes a [`render.yaml`](render.yaml) blueprint that deploys both services to [Render](https://render.com) for free:
+
+1. Push this repo to GitHub (already done if you're reading this there).
+2. On Render: **New → Blueprint**, connect this repository, and click **Apply**.
+3. After the first deploy, check the two service URLs Render assigned. If they
+   differ from the defaults in `render.yaml`, update the `ALLOWED_ORIGINS` env
+   var on the API service and `VITE_API_URL` on the frontend, then redeploy.
+4. (Recommended) Add a `GITHUB_TOKEN` env var on the API service so the app
+   gets 5,000 GitHub API requests/hour instead of 60.
+
 ## 🧪 Use Cases
 
 - Developers polishing their GitHub portfolios
