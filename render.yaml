@@ -10,13 +10,13 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.10
-      # The deployed frontend URL (Render appended a suffix since "gitrep" was taken)
+      # The deployed frontend URL
       - key: ALLOWED_ORIGINS
-        value: https://gitrep-ov16.onrender.com
+        value: https://git-rep.onrender.com
 
   # React frontend (static site)
   - type: web
-    name: gitrep
+    name: git-rep
     runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build

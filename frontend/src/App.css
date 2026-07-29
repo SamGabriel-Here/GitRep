@@ -303,7 +303,10 @@ button:disabled {
 .stat-value {
   font-weight: 600;
   font-size: 1.05rem;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-label {

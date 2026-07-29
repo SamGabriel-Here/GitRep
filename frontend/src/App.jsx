@@ -18,6 +18,20 @@ function formatDate(iso) {
   });
 }
 
+function timeAgo(iso) {
+  if (!iso) return "—";
+  const days = Math.floor((Date.now() - new Date(iso)) / 86400000);
+  if (days < 1) return "today";
+  if (days < 30) return `${days}d ago`;
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`;
+  return `${Math.floor(days / 365)}y ago`;
+}
+
+function formatLicense(license) {
+  if (!license) return "None";
+  return license === "NOASSERTION" ? "Other" : license;
+}
+
 const Icon = ({ path, size = 16 }) => (
   <svg
     className="icon"
@@ -152,8 +166,13 @@ function App() {
     { icon: icons.fork, value: result.forks.toLocaleString(), label: "Forks" },
     { icon: icons.code, value: result.language || "—", label: "Language" },
     { icon: icons.issue, value: result.open_issues.toLocaleString(), label: "Issues" },
-    { icon: icons.license, value: result.license || "None", label: "License" },
-    { icon: icons.clock, value: formatDate(result.last_push), label: "Last push" },
+    { icon: icons.license, value: formatLicense(result.license), label: "License" },
+    {
+      icon: icons.clock,
+      value: timeAgo(result.last_push),
+      label: "Last push",
+      title: formatDate(result.last_push),
+    },
   ];
 
   return (
@@ -206,7 +225,7 @@ function App() {
 
           <div className="stats-grid">
             {stats.map((s) => (
-              <div className="stat" key={s.label}>
+              <div className="stat" key={s.label} title={s.title}>
                 <Icon path={s.icon} />
                 <span className="stat-value">{s.value}</span>
                 <span className="stat-label">{s.label}</span>
