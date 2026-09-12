@@ -1,3 +1,5 @@
+<img src="docs/logo.svg" width="72" alt="">
+
 # GitRep
 
 Paste a public GitHub repository and GitRep grades it out of 100, then shows you which
@@ -97,7 +99,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The API listens on `http://localhost:8000`, with interactive docs at `/docs`.
+The API listens on `http://localhost:8000`, with interactive docs at `/api/docs`.
 
 ### Start the web app
 
@@ -111,19 +113,22 @@ npm run dev
 
 Open `http://localhost:5173` and paste a repository URL.
 
+The dev server proxies `/api` to uvicorn, so the front end talks to the same origin locally
+that it does in production. There is no API URL to configure.
+
 ## API reference
 
 Three endpoints, no authentication.
 
-### `GET /`
+### `GET /api/health`
 
 Health check.
 
 ```json
-{ "status": "ok", "version": "2.0.0" }
+{ "status": "ok", "version": "2.1.0" }
 ```
 
-### `GET /rubric/`
+### `GET /api/rubric`
 
 The eleven checks and their weights, with no repository attached. This is what the panel on
 the home page is built from.
@@ -143,12 +148,12 @@ the home page is built from.
 }
 ```
 
-### `POST /analyze_repo/`
+### `POST /api/analyze`
 
 Grades one repository. The URL can be a full link, an SSH remote, or just `owner/repo`.
 
 ```bash
-curl -X POST http://localhost:8000/analyze_repo/ \
+curl -X POST http://localhost:8000/api/analyze \
   -H 'Content-Type: application/json' \
   -d '{"github_url": "tiangolo/fastapi"}'
 ```
@@ -209,9 +214,11 @@ Every check comes back individually, so you can render your own report:
 }
 ```
 
-`suggestions` is the flat list of fixes, ordered by points lost, kept so an older client of
-this API keeps working. The repository fields are also spread onto the top level for the
-same reason.
+`suggestions` is the flat list of fixes, ordered by points lost, for anything that wants the
+short version without walking `checks`.
+
+Paths carry no trailing slash. FastAPI would answer a mismatch with a 307, and a redirect
+behind a serverless proxy is a round trip nobody needs.
 
 Errors come back as `{"detail": "..."}` with a status that says what went wrong: `400` for
 an unparseable URL, `404` for a missing or private repo, `429` when GitHub's rate limit is
@@ -225,15 +232,21 @@ report directly and any result you are looking at is a link you can send to some
 
 These are all optional, and all set as environment variables.
 
-| Variable | Where | Default | Purpose |
-| --- | --- | --- | --- |
-| `GITHUB_TOKEN` | backend | none | Personal access token. Raises the GitHub API limit from 60 to 5,000 requests an hour |
-| `ALLOWED_ORIGINS` | backend | `http://localhost:5173` | Comma-separated list of origins allowed through CORS |
-| `VITE_API_URL` | frontend | `http://localhost:8000` | Where the web app looks for the API |
+One variable, and it is optional.
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `GITHUB_TOKEN` | none | Personal access token. Raises the GitHub API limit from 60 to 5,000 requests an hour |
 
 Without a token you get 60 requests an hour, which runs out faster than you would expect.
-Set one before you demo this to anybody. Everything the backend reads from the environment
-lives in `backend/app/config.py`.
+Set one before you demo this to anybody.
+
+The app only reads public repositories, so it needs no scopes at all: a classic token with
+every box unticked already lifts the limit, and a fine-grained token needs nothing beyond
+read access to public repositories. Do not grant it `repo`.
+
+There is no API URL or CORS origin to configure, because the site and the API share an
+origin. Everything the backend reads from the environment lives in `backend/app/config.py`.
 
 Results are cached in memory for five minutes per repository, so grading the same repo twice
 in a row costs one GitHub request rather than four.
@@ -242,31 +255,35 @@ in a row costs one GitHub request rather than four.
 
 ```
 .
+├── api/
+│   └── index.py            Vercel entrypoint: puts backend/ on the path, exports the app
 ├── backend/
 │   ├── app/
-│   │   ├── config.py           environment settings, in one place
-│   │   ├── main.py             FastAPI app and the three routes
-│   │   ├── schemas.py          request models
+│   │   ├── config.py       environment settings, in one place
+│   │   ├── main.py         FastAPI app and the three routes, all under /api
+│   │   ├── schemas.py      request models
 │   │   ├── github/
-│   │   │   ├── client.py       async GitHub client, cache, error mapping
-│   │   │   └── repo_url.py     URL and owner/repo parsing
+│   │   │   ├── client.py   async GitHub client, cache, error mapping
+│   │   │   └── repo_url.py URL and owner/repo parsing
 │   │   └── rubric/
-│   │       ├── readme.py       markdown to a structured document
-│   │       ├── checks.py       the eleven weighted checks
-│   │       └── engine.py       runs them, totals categories, picks the band
-│   ├── tests/                  mirrors the modules above
+│   │       ├── readme.py   markdown to a structured document
+│   │       ├── checks.py   the eleven weighted checks
+│   │       └── engine.py   runs them, totals categories, picks the band
+│   ├── tests/              mirrors the modules above
 │   └── requirements.txt
 ├── frontend/
-│   ├── index.html              fonts and the pre-paint theme script
+│   ├── index.html          fonts and the pre-paint theme script
+│   ├── vite.config.js      dev proxy from /api to uvicorn
 │   └── src/
-│       ├── App.jsx             state and composition
-│       ├── components/         Masthead, GradeForm, Rubric, Report, LedgerRow, ThemeToggle
-│       ├── hooks/useTheme.js   theme state and persistence
-│       ├── lib/                api client, formatters, share-URL helpers
-│       └── styles/             tokens.css (the design tokens), app.css
-├── docs/                       screenshots used by this README
-├── DESIGN.md                   the design system contract
-└── render.yaml                 one-click deploy for both services
+│       ├── App.jsx         state and composition
+│       ├── components/     Masthead, GradeForm, Rubric, Report, LedgerRow, ThemeToggle
+│       ├── hooks/          useTheme
+│       ├── lib/            api client, formatters, share-URL helpers
+│       └── styles/         tokens.css (the design tokens), app.css
+├── docs/                   the logo and the screenshots used by this README
+├── DESIGN.md               the design system contract
+├── requirements.txt        points at backend/requirements.txt, for Vercel's Python runtime
+└── vercel.json             build, function, and routing config
 ```
 
 ## How the analysis works
@@ -316,15 +333,26 @@ ratios for both themes, and the accepted debt. Read it before changing anything 
 
 ## Deployment
 
-[`render.yaml`](render.yaml) deploys both services to [Render](https://render.com) on the
-free tier. On Render, choose **New → Blueprint**, connect this repository, and apply it.
+Vercel serves the built front end from its CDN and runs the API beside it as a Python
+function, so both live on one origin.
 
-After the first deploy, check the URLs Render assigned. If they differ from the defaults,
-update `ALLOWED_ORIGINS` on the API service and `VITE_API_URL` on the web service, then
-redeploy. Add a `GITHUB_TOKEN` to the API service while you are there.
+1. On Vercel, choose **Add New → Project** and import this repository.
+2. Leave the build settings alone. [`vercel.json`](vercel.json) already sets the build
+   command, the output directory, and the rewrite that sends `/api/*` to the function.
+3. Add `GITHUB_TOKEN` under **Settings → Environment Variables** before the first deploy, or
+   the API runs on GitHub's 60 requests an hour.
 
-The free tier sleeps when idle, so the first request after a quiet spell takes up to a
-minute. The web app says so rather than looking broken.
+The function has a 15 second ceiling, which is generous: a grade is one GitHub call followed
+by three concurrent ones, and the client gives up on any of them after 10.
+
+This used to deploy to Render, whose free tier spins a service down after about fifteen
+minutes idle and then takes roughly fifty seconds to answer the next request. The interface
+carried a note apologising for it. Vercel's functions start in a fraction of a second, so
+both the note and the second origin are gone.
+
+The one thing lost in the move is the five minute cache in `github/client.py`. It lives in
+process, and serverless instances are short-lived, so it now helps only within a warm one.
+With a token raising the limit to 5,000 requests an hour, that is a fair trade.
 
 ## Limits and known gaps
 
@@ -333,7 +361,8 @@ minute. The web app says so rather than looking broken.
   code scores well, which is the intended scope rather than an oversight.
 - Heading matching is English-only. A README written in another language will lose the setup
   and usage checks even when it explains both.
-- The cache is in-process, so it resets on deploy and is not shared between instances.
+- The cache is in-process. On serverless it only helps within a warm instance, so the same
+  repository graded twice may cost two sets of GitHub calls.
 
 ## License
 
