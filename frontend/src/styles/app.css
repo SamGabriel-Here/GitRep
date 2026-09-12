@@ -1,0 +1,557 @@
+/* ---------- shell ---------- */
+
+.shell {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 4rem;
+}
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0 1.15rem;
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 144, "WONK" 1, "SOFT" 0;
+  font-weight: 700;
+  font-size: var(--step-1);
+  letter-spacing: -0.02em;
+}
+
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}
+
+/* ---------- opening ---------- */
+
+.opening {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(2.25rem, 6vw, 4.5rem);
+  align-items: start;
+  padding: clamp(2.5rem, 8vh, 4.5rem) 0;
+}
+
+.headline {
+  font-size: var(--step-3);
+  font-variation-settings: "opsz" 144, "WONK" 1, "SOFT" 0;
+  font-weight: 600;
+}
+
+.standfirst {
+  max-width: var(--measure);
+  margin-top: 1.25rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+/* ---------- input ---------- */
+
+.field {
+  display: flex;
+  margin-top: 2.25rem;
+  border: 1px solid var(--ink-faint);
+  border-radius: 3px;
+  background: var(--sheet);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px var(--deduct-wash);
+}
+
+.field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.85rem 0.95rem;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  border-radius: 3px 0 0 3px;
+}
+
+.field input:focus {
+  outline: none;
+}
+
+.field input::placeholder {
+  color: var(--ink-faint);
+}
+
+.field button {
+  flex: 0 0 auto;
+  padding: 0.85rem 1.5rem;
+  border: 0;
+  border-left: 1px solid var(--ink-faint);
+  border-radius: 0 3px 3px 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.field button:hover:not(:disabled) {
+  opacity: 0.86;
+}
+
+.field button:disabled {
+  cursor: progress;
+  opacity: 0.55;
+}
+
+.examples {
+  margin-top: 0.85rem;
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  align-items: baseline;
+}
+
+.example {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-size: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.25em;
+}
+
+.example:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+/* ---------- rubric panel ---------- */
+
+.rubric {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: clamp(1.25rem, 3vw, 1.9rem);
+}
+
+.rubric-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rubric-title {
+  font-size: var(--step-1);
+  font-variation-settings: "opsz" 48, "WONK" 1, "SOFT" 20;
+}
+
+.rubric-total {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.rubric-group {
+  margin-top: 1.15rem;
+}
+
+.rubric-group-name {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  margin-bottom: 0.35rem;
+}
+
+/* ---------- ledger rows ---------- */
+
+.row {
+  display: flex;
+  align-items: baseline;
+  font-size: var(--step-0);
+}
+
+.row-label {
+  flex: 0 1 auto;
+}
+
+.leader {
+  flex: 1 1 auto;
+  min-width: 1.25rem;
+  margin: 0 0.5rem;
+  border-bottom: 1px dotted var(--rule);
+  transform: translateY(-0.3em);
+  transform-origin: left center;
+}
+
+.row-points {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+.row-points.is-loss {
+  color: var(--deduct);
+  font-weight: 700;
+}
+
+.row-points.is-pass {
+  color: var(--ink-soft);
+}
+
+/* ---------- report ---------- */
+
+.report {
+  padding-top: clamp(1.5rem, 5vh, 2.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+}
+
+.repo-name {
+  font-size: var(--step-2);
+  font-variation-settings: "opsz" 96, "WONK" 1, "SOFT" 0;
+  font-weight: 600;
+}
+
+.repo-name .owner {
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+
+.repo-link {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.repo-description {
+  margin-top: 0.6rem;
+  max-width: var(--measure);
+  color: var(--ink-soft);
+}
+
+.flags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.flag {
+  font-size: var(--step--1);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.05rem 0.45rem;
+  color: var(--ink-soft);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 2.25rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule-faint);
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.fact dt {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.fact dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- the ledger ---------- */
+
+.ledger {
+  margin-top: clamp(2rem, 6vh, 3rem);
+}
+
+.ledger-head {
+  font-size: var(--step-1);
+  font-variation-settings: "opsz" 48, "WONK" 1, "SOFT" 20;
+  margin-bottom: 0.35rem;
+}
+
+.ledger-intro {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  max-width: var(--measure);
+  margin-bottom: 2rem;
+}
+
+.category {
+  margin-bottom: 2.15rem;
+}
+
+.category-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.4rem;
+}
+
+.category-name {
+  font-size: var(--step-0);
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.category-score {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry {
+  padding: 0.5rem 0 0.65rem;
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.entry:last-child {
+  border-bottom: 0;
+}
+
+.entry-detail {
+  margin-top: 0.2rem;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  max-width: 46rem;
+}
+
+.entry-fix {
+  margin-top: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  background: var(--deduct-wash);
+  border-left: 2px solid var(--deduct);
+  color: var(--ink);
+  font-size: var(--step--1);
+  max-width: 46rem;
+}
+
+/* ---------- total ---------- */
+
+.total {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.total-verdict {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "WONK" 1, "SOFT" 40;
+  font-size: var(--step-2);
+  color: var(--ink-soft);
+  line-height: 1.15;
+}
+
+.total-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 0.85;
+}
+
+.total-value {
+  font-size: clamp(3.5rem, 13vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.total-of {
+  font-size: var(--step-1);
+  color: var(--ink-soft);
+}
+
+/* ---------- notes ---------- */
+
+.note,
+.error {
+  margin-top: 1.1rem;
+  font-size: var(--step--1);
+  max-width: var(--measure);
+}
+
+.note {
+  color: var(--ink-soft);
+}
+
+.error {
+  color: var(--deduct);
+  border-left: 2px solid var(--deduct);
+  padding: 0.4rem 0.7rem;
+  background: var(--deduct-wash);
+}
+
+.footer {
+  margin-top: clamp(3rem, 10vh, 5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule-faint);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+/* ---------- one orchestrated reveal ---------- */
+
+@keyframes draw {
+  from {
+    transform: translateY(-0.3em) scaleX(0);
+  }
+  to {
+    transform: translateY(-0.3em) scaleX(1);
+  }
+}
+
+@keyframes land {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.is-revealing .leader {
+  animation: draw 0.55s cubic-bezier(0.2, 0.75, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+.is-revealing .row-points,
+.is-revealing .entry-detail,
+.is-revealing .entry-fix {
+  animation: land 0.45s ease-out both;
+  animation-delay: calc(var(--i, 0) * 40ms + 180ms);
+}
+
+.is-revealing .total {
+  animation: land 0.6s ease-out both;
+  animation-delay: 640ms;
+}
+
+.spinner {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: -0.1em;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- narrow ---------- */
+
+@media (max-width: 860px) {
+  .opening {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .field {
+    flex-direction: column;
+  }
+
+  .field input {
+    border-radius: 3px 3px 0 0;
+  }
+
+  .field button {
+    border-left: 0;
+    border-top: 1px solid var(--ink-faint);
+    border-radius: 0 0 3px 3px;
+  }
+
+  .total {
+    align-items: baseline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

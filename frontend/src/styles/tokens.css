@@ -1,0 +1,108 @@
+/* Two grounds, one design. Light is the default: this is a graded document,
+   and documents are read on paper. Dark keeps the same structure on ink. */
+
+:root[data-theme="light"] {
+  --paper: #e9eae6;
+  --sheet: #f4f5f1;
+  --ink: #1c2119;
+  --ink-soft: #4f564c;
+  --ink-faint: #646b61;
+  --rule: #c4c8bf;
+  --rule-faint: #d6d9d1;
+  --deduct: #8c2f23;
+  --deduct-wash: rgba(140, 47, 35, 0.07);
+  --focus: #1c2119;
+}
+
+:root[data-theme="dark"] {
+  --paper: #14181a;
+  --sheet: #1b2023;
+  --ink: #e6e8e3;
+  --ink-soft: #9aa29b;
+  --ink-faint: #7d857f;
+  --rule: #313839;
+  --rule-faint: #252b2d;
+  --deduct: #e2705a;
+  --deduct-wash: rgba(226, 112, 90, 0.11);
+  --focus: #e6e8e3;
+}
+
+:root {
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+
+  --step--1: clamp(0.78rem, 0.755rem + 0.12vw, 0.83rem);
+  --step-0: clamp(0.88rem, 0.85rem + 0.15vw, 0.95rem);
+  --step-1: clamp(0.95rem, 0.9rem + 0.25vw, 1.06rem);
+  --step-2: clamp(1.3rem, 1.15rem + 0.7vw, 1.75rem);
+  --step-3: clamp(1.9rem, 1.4rem + 2.4vw, 3.4rem);
+
+  --gutter: clamp(1.15rem, 4vw, 3rem);
+  --measure: 34rem;
+
+  color-scheme: light;
+  font-family: var(--mono);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-size: var(--step-0);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 128, "WONK" 1, "SOFT" 12;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.25em;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}

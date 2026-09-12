@@ -3,19 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="GitRep — instant, honest feedback on any public GitHub repository. Get a quality score and actionable suggestions."
+      content="GitRep grades any public GitHub repository against a 100-point rubric and itemises exactly where the points went."
     />
-    <meta name="theme-color" content="#08080d" />
+    <meta name="theme-color" content="#E9EAE6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14181A" media="(prefers-color-scheme: dark)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <title>GitRep</title>
+    <title>GitRep — how does your repo read to a stranger?</title>
+    <script>
+      // Runs before paint so a dark-theme reader never sees a white flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem("gitrep-theme");
+          var system = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = saved || system;
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
