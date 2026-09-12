@@ -70,6 +70,7 @@ _ATX = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 _SETEXT = re.compile(r"^(?P<text>\S[^\n]*)\n(?P<rule>=+|-{2,})[ \t]*$", re.M)
 _INLINE_CODE = re.compile(r"`[^`\n]+`")
 _HTML_TAG = re.compile(r"<[^>]+>")
+_HTML_ENTITY = re.compile(r"&(?:[A-Za-z]+|#\d+);")
 _LIST_MARK = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+", re.M)
 _QUOTE_MARK = re.compile(r"^\s*>+\s?", re.M)
 _TABLE_RULE = re.compile(r"^\s*\|?[\s:|-]{4,}\|?\s*$", re.M)
@@ -207,9 +208,16 @@ def _collect_headings(text: str) -> list[Heading]:
     for index, line in enumerate(text.split("\n")):
         match = _ATX.match(line.strip())
         if match:
-            title = _INLINE_CODE.sub(lambda m: m.group(0).strip("`"), match.group(2))
+            # Badges live in headings more often than you would hope, and their
+            # alt text is not part of the title: React's H1 carries a "GitHub
+            # license" image that would otherwise read as heading words.
+            title = _MD_IMAGE.sub(" ", match.group(2))
+            title = _HTML_IMAGE.sub(" ", title)
+            title = _INLINE_CODE.sub(lambda m: m.group(0).strip("`"), title)
             title = _MD_LINK.sub(lambda m: m.group("text"), title)
-            title = _EMPHASIS.sub("", _HTML_TAG.sub("", title)).strip()
+            title = _EMPHASIS.sub("", _HTML_TAG.sub("", title))
+            title = _HTML_ENTITY.sub(" ", title)
+            title = re.sub(r"\s+", " ", title).strip(" ·-—:|")
             if title:
                 headings.append(Heading(level=len(match.group(1)), text=title, line=index))
     return headings

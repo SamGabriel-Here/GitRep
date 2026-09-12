@@ -30,8 +30,16 @@ INSTALL = _patterns(
     r"\bprerequisites?\b",
     r"\brequirements?\b",
     r"\bbuild from source\b",
-    r"\brun(?:ning)?\b[^.\n]{0,15}\blocally\b",
     r"\bdeployment\b",
+    r"\blocal development\b",
+    r"\brun(?:ning)?\s+(?:it|this|locally|the\s+(?!tests?\b)\w+)\b",
+    r"\bbuild(?:ing)?\s+(?:it|this|the\s+(?!tests?\b)\w+)\b",
+    # Anchored on purpose, so these only ever match a heading. "Building" and
+    # "running" are ordinary English: unanchored, "a library for building user
+    # interfaces" would earn setup marks in any README that mentions the word.
+    # A test section is excluded too, since crediting "Running the tests" as
+    # setup tells someone their install docs exist when they do not.
+    r"^\s*(?:run(?:ning)?|build(?:ing)?|deploy(?:ing)?)\b(?![^.\n]*\btests?\b)",
 )
 
 USAGE = _patterns(
