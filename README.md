@@ -92,11 +92,10 @@ You need Python 3.10 or newer and Node 20 or newer.
 ### Start the API
 
 ```bash
-cd backend
 python3 -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+uvicorn app.main:app --app-dir backend --reload
 ```
 
 The API listens on `http://localhost:8000`, with interactive docs at `/api/docs`.
@@ -269,8 +268,7 @@ in a row costs one GitHub request rather than four.
 │   │       ├── readme.py   markdown to a structured document
 │   │       ├── checks.py   the eleven weighted checks
 │   │       └── engine.py   runs them, totals categories, picks the band
-│   ├── tests/              mirrors the modules above
-│   └── requirements.txt
+│   └── tests/              mirrors the modules above
 ├── frontend/
 │   ├── index.html          fonts and the pre-paint theme script
 │   ├── vite.config.js      dev proxy from /api to uvicorn
@@ -282,7 +280,7 @@ in a row costs one GitHub request rather than four.
 │       └── styles/         tokens.css (the design tokens), app.css
 ├── docs/                   the logo and the screenshots used by this README
 ├── DESIGN.md               the design system contract
-├── requirements.txt        points at backend/requirements.txt, for Vercel's Python runtime
+├── requirements.txt        Python dependencies, read by Vercel and by local setup
 └── vercel.json             build, function, and routing config
 ```
 
@@ -309,8 +307,7 @@ concurrently over httpx, so a grade costs one round trip rather than four in seq
 ## Tests
 
 ```bash
-cd backend
-python -m pytest tests -q
+python -m pytest backend/tests -q
 ```
 
 Fifty-four tests, mirroring the modules they cover:
