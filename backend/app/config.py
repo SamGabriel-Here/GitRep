@@ -17,14 +17,7 @@ CACHE_TTL = 300
 REQUEST_TIMEOUT = 10.0
 CONNECT_TIMEOUT = 5.0
 
-DEFAULT_ORIGIN = "http://localhost:5173"
-
 
 def github_token() -> str | None:
     """A personal access token lifts the rate limit from 60/hour to 5,000."""
     return os.getenv("GITHUB_TOKEN") or None
-
-
-def allowed_origins() -> list[str]:
-    raw = os.getenv("ALLOWED_ORIGINS", DEFAULT_ORIGIN)
-    return [origin.strip() for origin in raw.split(",") if origin.strip()]

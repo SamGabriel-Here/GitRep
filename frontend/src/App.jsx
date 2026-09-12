@@ -17,9 +17,7 @@ export default function App() {
   const [report, setReport] = useState(null);
   const [rubric, setRubric] = useState(null);
   const [busy, setBusy] = useState(false);
-  const [slow, setSlow] = useState(false);
   const [error, setError] = useState("");
-  const slowTimer = useRef(null);
   const reportRef = useRef(null);
 
   const run = useCallback(async (value) => {
@@ -29,7 +27,6 @@ export default function App() {
     setBusy(true);
     setError("");
     setReport(null);
-    slowTimer.current = setTimeout(() => setSlow(true), 3500);
 
     try {
       const result = await grade(trimmed);
@@ -39,8 +36,6 @@ export default function App() {
       setError(err.message);
       putRepoInUrl("");
     } finally {
-      clearTimeout(slowTimer.current);
-      setSlow(false);
       setBusy(false);
     }
   }, []);
@@ -87,12 +82,6 @@ export default function App() {
             busy={busy}
           />
 
-          {slow && busy && (
-            <p className="note">
-              Waking the server. Free hosting sleeps when idle, so a first request can take up to a
-              minute.
-            </p>
-          )}
 
           {error && (
             <p className="error" role="alert">

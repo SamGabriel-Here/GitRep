@@ -1,9 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+// Same origin in every environment: production serves the API as a function
+// next to the built site, and the Vite dev server proxies /api to uvicorn.
 
 async function call(path, options) {
   let response;
   try {
-    response = await fetch(`${API_URL}${path}`, options);
+    response = await fetch(`/api${path}`, options);
   } catch {
     throw new Error("Could not reach the GitRep server. Check your connection and try again.");
   }
@@ -16,7 +17,7 @@ async function call(path, options) {
 }
 
 export function grade(target) {
-  return call("/analyze_repo/", {
+  return call("/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ github_url: target }),
@@ -24,5 +25,5 @@ export function grade(target) {
 }
 
 export function loadRubric() {
-  return call("/rubric/");
+  return call("/rubric");
 }
