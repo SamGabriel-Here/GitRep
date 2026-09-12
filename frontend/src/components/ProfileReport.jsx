@@ -99,7 +99,7 @@ export default function ProfileReport({ report, onPickRepo }) {
                 <LedgerRow
                   label={repo.name.split("/")[1] || repo.name}
                   points={`${repo.score}`}
-                  tone={repo.score >= 85 ? "is-pass" : "is-loss"}
+                  tone="is-pass"
                   index={index}
                 />
                 <span className="repo-row-meta">

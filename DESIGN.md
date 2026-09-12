@@ -187,6 +187,10 @@ only then lists the repositories themselves.
 - **States:** default, hover (a `--rule-faint` wash), focus-visible
 - **Why a wash rather than the deduction colour:** the row is a target, not a warning. The
   accent means points lost and nothing else, so a hover cannot borrow it.
+- **Why the score is never coloured:** an early version tinted any score under 85 with the
+  deduction accent. That is traffic-light scoring wearing one light, which Section 2 rules
+  out, and it painted an 82 as a failure. The figure shown is points *earned*, so it takes
+  the quiet tone; the list is ordered best first, which is what conveys standing.
 
 ### Field (`.field` in `styles/app.css`)
 
