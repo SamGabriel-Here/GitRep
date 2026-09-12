@@ -165,6 +165,29 @@ The primitive the whole system is built from. Used by both the rubric panel and 
 - **Motion:** one orchestrated reveal, keyed on repo name so it replays per grade.
 - **Layout:** stack. Owns no scroll; the page scrolls.
 
+### ProfileReport (`components/ProfileReport.jsx`)
+
+The same ledger at a different altitude. A profile is not twenty scorecards, it is one
+picture of a habit, so the page leads with each check totalled across every repository and
+only then lists the repositories themselves.
+
+- **Structure:** `main.report > .identity + dl.facts + section.ledger (habits) + section.ledger (repos)`
+- **Rows:** `LedgerRow` unchanged in both sections. A habit's figure is the points that check
+  costs across the whole profile; a repository's figure is its score.
+- **States:** a profile with no non-fork repositories renders a `.note` instead of two empty
+  ledgers.
+- **Accessibility:** repository rows are real `button` elements, so they are reachable and
+  operable from the keyboard and take the same focus ring as everything else.
+- **Motion:** the same single reveal, staggered across the habits.
+- **Layout:** stack. Owns no scroll.
+
+### Repo row (`.repo-row` in `styles/app.css`)
+
+- **Structure:** `button.repo-row > LedgerRow + .repo-row-meta`
+- **States:** default, hover (a `--rule-faint` wash), focus-visible
+- **Why a wash rather than the deduction colour:** the row is a target, not a warning. The
+  accent means points lost and nothing else, so a hover cannot borrow it.
+
 ### Field (`.field` in `styles/app.css`)
 
 - **Structure:** bordered unit containing `input` + submit `button`, sharing one 3px radius

@@ -13,6 +13,12 @@ GITHUB_API = "https://api.github.com"
 # Seconds a repo's data stays cached before we ask GitHub again.
 CACHE_TTL = 300
 
+# A profile grade costs three GitHub calls per repository, and the serverless
+# function is capped at 15 seconds, so both of these are latency budgets rather
+# than preferences.
+PROFILE_REPO_LIMIT = 20
+PROFILE_CONCURRENCY = 8
+
 # Total and connect timeouts for a single GitHub request.
 REQUEST_TIMEOUT = 10.0
 CONNECT_TIMEOUT = 5.0

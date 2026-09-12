@@ -3,15 +3,16 @@
 # GitRep
 
 Paste a public GitHub repository and GitRep grades it out of 100, then shows you which
-checks took points off and what to do about each one.
+checks took points off and what to do about each one. Paste a username instead and it grades
+everything they have published, then tells you which habit is costing them the most.
 
 The scoring is subtractive on purpose. Every repository starts at 100 and loses points for
 the things a first-time visitor notices: a README with no setup commands, or a wall of
 badges where a screenshot should be. What comes back is an itemised ledger rather than a
 number you have to take on faith.
 
-**Live at [getgitrep.vercel.app](https://getgitrep.vercel.app).** Paste any public repo, or open
-`?repo=owner/name` to link straight to a graded report.
+**Live at [getgitrep.vercel.app](https://getgitrep.vercel.app).** Paste any public repo or username,
+or open `?target=owner/name` to link straight to a graded report.
 
 [![CI](https://github.com/SamGabriel-Here/GitRep/actions/workflows/ci.yml/badge.svg)](https://github.com/SamGabriel-Here/GitRep/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -22,6 +23,7 @@ number you have to take on faith.
 
 - [What it grades](#what-it-grades)
 - [How a check is scored](#how-a-check-is-scored)
+- [Grading a whole profile](#grading-a-whole-profile)
 - [Running it locally](#running-it-locally)
 - [API reference](#api-reference)
 - [Configuration](#configuration)
@@ -88,6 +90,31 @@ The bands each check uses:
 Each check reports a `status` of `pass` (full marks), `partial` (some points lost), or
 `fail` (nothing earned).
 
+## Grading a whole profile
+
+A single scorecard tells you about one repository. Twenty of them tell you about a person,
+but only if you add them up, so a profile report leads with the running total per check
+rather than a wall of individual scores:
+
+```
+Where the points go
+  License ................. −68    Missing in 8, thin in 1, of 14.
+  Screenshots ............. −66    Missing in 8, thin in 1, of 14.
+  Topics .................. −59    Missing in 8, thin in 1, of 14.
+```
+
+That is the thing worth acting on. Adding a license to eight repositories is an afternoon,
+and it is worth more than perfecting the README of the one you like best.
+
+The rules:
+
+- Forks are skipped. A fork's README is somebody else's writing, and grading it would say
+  nothing about how you write.
+- The twenty most recently pushed repositories are graded. A profile costs three GitHub
+  calls per repository and the serverless function has fifteen seconds, so the cap is a
+  latency budget rather than a preference.
+- Repositories are listed best first, and picking one grades it on its own.
+
 ## Running it locally
 
 You need Python 3.10 or newer and Node 20 or newer.
@@ -127,7 +154,7 @@ Three endpoints, no authentication.
 Health check.
 
 ```json
-{ "status": "ok", "version": "2.1.0" }
+{ "status": "ok", "version": "2.2.0" }
 ```
 
 ### `GET /api/rubric`
@@ -152,7 +179,9 @@ the home page is built from.
 
 ### `POST /api/analyze`
 
-Grades one repository. The URL can be a full link, an SSH remote, or just `owner/repo`.
+Grades one repository, or a whole profile. The input can be a full link, an SSH remote,
+`owner/repo`, or a bare username. The server decides which was pasted and says so in `kind`,
+so a client switches on that rather than parsing GitHub URLs itself.
 
 ```bash
 curl -X POST http://localhost:8000/api/analyze \
@@ -164,7 +193,7 @@ Every check comes back individually, so you can render your own report:
 
 ```json
 {
-  "name": "fastapi/fastapi",
+  "kind": "repo",
   "score": 97,
   "band": "exemplary",
   "repo": {
@@ -219,6 +248,38 @@ Every check comes back individually, so you can render your own report:
 `suggestions` is the flat list of fixes, ordered by points lost, for anything that wants the
 short version without walking `checks`.
 
+A profile comes back as `kind: "profile"` instead, with the per-check totals in `habits`
+(ordered by points lost) and the individual reports in `repos` (ordered best first):
+
+```json
+{
+  "kind": "profile",
+  "owner": { "login": "SamGabriel-Here", "public_repos": 14 },
+  "analysed": 14,
+  "eligible": 14,
+  "skipped_forks": 0,
+  "average": 69,
+  "median": 66,
+  "best": 100,
+  "worst": 26,
+  "band": "solid",
+  "habits": [
+    {
+      "id": "license",
+      "label": "License",
+      "possible": 112,
+      "lost": 68,
+      "failing": 8,
+      "partial": 1,
+      "passing": 5,
+      "detail": "Missing in 8, thin in 1, of 14.",
+      "fix": "Add a license, or nobody can legally reuse this."
+    }
+  ],
+  "repos": [{ "name": "SamGabriel-Here/GitRep", "score": 100, "band": "exemplary", "checks": [] }]
+}
+```
+
 Paths carry no trailing slash. FastAPI would answer a mismatch with a 307, and a redirect
 behind a serverless proxy is a round trip nobody needs.
 
@@ -227,7 +288,7 @@ an unparseable URL, `404` for a missing or private repo, `429` when GitHub's rat
 used up (the message says roughly how long to wait), `502` or `504` when GitHub is
 unreachable or slow.
 
-A graded repository also lives in the front end's URL, so `?repo=owner/name` loads that
+A graded repository also lives in the front end's URL, so `?target=owner/name` loads that
 report directly and any result you are looking at is a link you can send to someone.
 
 ## Configuration
@@ -266,18 +327,19 @@ in a row costs one GitHub request rather than four.
 │   │   ├── schemas.py      request models
 │   │   ├── github/
 │   │   │   ├── client.py   async GitHub client, cache, error mapping
-│   │   │   └── repo_url.py URL and owner/repo parsing
+│   │   │   └── repo_url.py decides whether you pasted a repo or a profile
 │   │   └── rubric/
 │   │       ├── readme.py   markdown to a structured document
 │   │       ├── checks.py   the eleven weighted checks
-│   │       └── engine.py   runs them, totals categories, picks the band
+│   │       └── engine.py   runs them, for one repo or a whole profile
 │   └── tests/              mirrors the modules above
 ├── frontend/
 │   ├── index.html          fonts and the pre-paint theme script
 │   ├── vite.config.js      dev proxy from /api to uvicorn
 │   └── src/
 │       ├── App.jsx         state and composition
-│       ├── components/     Masthead, GradeForm, Rubric, Report, LedgerRow, ThemeToggle
+│       ├── components/     Masthead, GradeForm, Rubric, Report, ProfileReport,
+│       │                  LedgerRow, ThemeToggle
 │       ├── hooks/          useTheme
 │       ├── lib/            api client, formatters, share-URL helpers
 │       └── styles/         tokens.css (the design tokens), app.css
@@ -313,15 +375,18 @@ concurrently over httpx, so a grade costs one round trip rather than four in seq
 python -m pytest backend/tests -q
 ```
 
-Fifty-four tests, mirroring the modules they cover:
+Seventy-seven tests, mirroring the modules they cover:
 
 - `test_readme.py` covers the parser: badge walls that should not count as screenshots,
   unclosed code fences, setext headings, HTML comments, and sections owning their
   subsections.
 - `test_checks.py` covers the rubric: `Uninstall` headings that should not count as setup
   instructions, the graded bands for every check, and that the weights still total 100.
-- `test_repo_url.py` covers every URL shape that should resolve to the same repository, and
-  the ones that should be rejected.
+- `test_repo_url.py` covers every URL shape that should resolve to the same repository, which
+  shapes are a profile instead, and the ones that should be rejected.
+- `test_client.py` covers the difference between a repository that has no README and a
+  request that ran out of rate limit, which is the distinction that decides whether a report
+  is honestly missing or confidently wrong.
 
 CI runs the same suite on every push, alongside the front end's lint and build.
 
@@ -357,6 +422,7 @@ With a token raising the limit to 5,000 requests an hour, that is a fair trade.
 ## Limits and known gaps
 
 - Only public repositories. There is no OAuth flow, so a private repo reads as missing.
+- A profile grades at most twenty repositories, most recently pushed first, and skips forks.
 - The rubric judges presentation, not code. A beautifully documented project with broken
   code scores well, which is the intended scope rather than an oversight.
 - Heading matching is English-only. A README written in another language will lose the setup

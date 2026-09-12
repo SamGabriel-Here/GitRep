@@ -8,13 +8,13 @@ export default function GradeForm({ value, onChange, onSubmit, onPickExample, ex
     <>
       <form className="field" onSubmit={submit}>
         <label className="visually-hidden" htmlFor="repo">
-          GitHub repository
+          GitHub repository or username
         </label>
         <input
           id="repo"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="github.com/owner/repo"
+          placeholder="github.com/owner/repo, or a username"
           spellCheck="false"
           autoCapitalize="off"
           autoCorrect="off"
