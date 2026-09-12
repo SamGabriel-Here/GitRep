@@ -96,15 +96,12 @@ A single scorecard tells you about one repository. Twenty of them tell you about
 but only if you add them up, so a profile report leads with the running total per check
 rather than a wall of individual scores:
 
-```
-Where the points go
-  License ................. −68    Missing in 8, thin in 1, of 14.
-  Screenshots ............. −66    Missing in 8, thin in 1, of 14.
-  Topics .................. −59    Missing in 8, thin in 1, of 14.
-```
+![A profile report, with each check totalled across every repository](docs/screenshot-profile.png)
 
 That is the thing worth acting on. Adding a license to eight repositories is an afternoon,
 and it is worth more than perfecting the README of the one you like best.
+
+A fourteen repository profile grades in under two seconds.
 
 The rules:
 
