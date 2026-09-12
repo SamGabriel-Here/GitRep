@@ -2,7 +2,7 @@
 
 Ten checks, weighted to exactly 100 points. Every check can award partial
 credit, because "has a Usage heading but no example you can copy" is genuinely
-better than nothing and genuinely worse than the real thing — the old pass/fail
+better than nothing and genuinely worse than the real thing. The old pass/fail
 scoring collapsed those into the same answer.
 """
 
@@ -189,7 +189,7 @@ def _description(readme: Readme, repo: dict) -> Check:
         earned, detail = 8, "Description set."
     fix = {
         8: "",
-        4: "Write a full sentence — this is what shows up in search results.",
+        4: "Write a full sentence. This is what shows up in search results.",
         0: "Add a one-line description. It appears on your profile and in search.",
     }[earned]
     return Check("description", "discovery", "Description", 8, earned, detail, fix)
@@ -244,7 +244,7 @@ def _signals(readme: Readme, repo: dict) -> Check:
     earned = _band(len(found), ((1, 0), (2, 4)), 7)
     listed = ", ".join(found)
     detail = f"{listed[:1].upper()}{listed[1:]}." if found else "No CI, contributing guide, or tests."
-    fix = "" if earned >= 7 else "Add CI, a contributing guide, or visible tests — each one says the project is maintained."
+    fix = "" if earned >= 7 else "Add CI, a contributing guide, or visible tests. Each one says the project is maintained."
     return Check("signals", "trust", "Project signals", 7, earned, detail, fix)
 
 

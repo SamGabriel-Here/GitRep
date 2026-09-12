@@ -190,3 +190,58 @@ def test_setup_heading_beats_deployment_heading():
 def test_local_run_headings_all_count_as_setup(heading):
     readme = f"# Tool\n\n## {heading}\n\n```bash\nnpm run dev\n```\n"
     assert by_id(engine.analyse(readme, repo()), "install")["earned"] == 12
+
+
+def graded(*scores):
+    """Build the (repo, report) pairs analyse_profile expects."""
+    out = []
+    for index, score in enumerate(scores):
+        readme = GOOD_README if score == 100 else "# Thin\n\nNot much here.\n"
+        overrides = {} if score == 100 else {"description": None, "topics": [], "license": None, "homepage": None}
+        info = {"name": f"owner/repo{index}", "url": "", "description": None, "language": None,
+                "stars": 0, "pushed_at": None, "is_archived": False}
+        out.append(({**info, **repo(**overrides)}, engine.analyse(readme, repo(**overrides))))
+    return out
+
+
+def test_a_profile_of_one_repo_averages_that_repo():
+    pairs = graded(100)
+    report = engine.analyse_profile({"login": "owner"}, pairs)
+    assert report["kind"] == "profile"
+    assert report["analysed"] == 1
+    assert report["average"] == pairs[0][1]["score"]
+
+
+def test_habits_are_ordered_by_points_lost():
+    report = engine.analyse_profile({"login": "owner"}, graded(100, 0, 0))
+    lost = [h["lost"] for h in report["habits"]]
+    assert lost == sorted(lost, reverse=True)
+
+
+def test_a_habit_counts_every_repo_it_touches():
+    report = engine.analyse_profile({"login": "owner"}, graded(100, 0, 0))
+    for habit in report["habits"]:
+        assert habit["failing"] + habit["partial"] + habit["passing"] == 3
+        assert habit["possible"] == 3 * next(c["possible"] for c in engine.rubric() if c["id"] == habit["id"])
+
+
+def test_a_habit_nobody_fails_says_so():
+    report = engine.analyse_profile({"login": "owner"}, graded(100, 100))
+    licence = next(h for h in report["habits"] if h["id"] == "license")
+    assert licence["lost"] == 0
+    assert licence["detail"] == "Full marks in all 2."
+    assert licence["fix"] == ""
+
+
+def test_repos_come_back_best_first():
+    report = engine.analyse_profile({"login": "owner"}, graded(0, 100, 0))
+    scores = [r["score"] for r in report["repos"]]
+    assert scores == sorted(scores, reverse=True)
+
+
+def test_an_empty_profile_does_not_divide_by_zero():
+    report = engine.analyse_profile({"login": "owner"}, [])
+    assert report["analysed"] == 0
+    assert report["average"] == 0
+    assert report["habits"] == []
+    assert report["repos"] == []

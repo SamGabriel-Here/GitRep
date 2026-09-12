@@ -1,19 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./styles/app.css";
 import { grade, loadRubric } from "./lib/api";
-import { repoFromUrl, putRepoInUrl } from "./lib/shareUrl";
+import { targetFromUrl, putTargetInUrl } from "./lib/shareUrl";
 import { useTheme } from "./hooks/useTheme";
 import GradeForm from "./components/GradeForm";
 import Masthead from "./components/Masthead";
+import ProfileReport from "./components/ProfileReport";
 import Report from "./components/Report";
 import Rubric from "./components/Rubric";
 
 const SOURCE_URL = "https://github.com/SamGabriel-Here/GitRep";
-const EXAMPLES = ["facebook/react", "tiangolo/fastapi", "SamGabriel-Here/GitRep"];
+const EXAMPLES = ["facebook/react", "SamGabriel-Here/GitRep", "SamGabriel-Here"];
 
 export default function App() {
   const [theme, toggleTheme] = useTheme();
-  const [target, setTarget] = useState(repoFromUrl);
+  const [target, setTarget] = useState(targetFromUrl);
   const [report, setReport] = useState(null);
   const [rubric, setRubric] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -31,10 +32,10 @@ export default function App() {
     try {
       const result = await grade(trimmed);
       setReport(result);
-      putRepoInUrl(result.repo.name);
+      putTargetInUrl(result.kind === "profile" ? result.owner.login : result.repo.name);
     } catch (err) {
       setError(err.message);
-      putRepoInUrl("");
+      putTargetInUrl("");
     } finally {
       setBusy(false);
     }
@@ -46,7 +47,7 @@ export default function App() {
 
   // Opening a shared link grades that repo straight away.
   useEffect(() => {
-    const shared = repoFromUrl();
+    const shared = targetFromUrl();
     if (shared) run(shared);
   }, [run]);
 
@@ -69,8 +70,9 @@ export default function App() {
         <div className="pitch">
           <h1 className="headline">Every repo starts at 100.</h1>
           <p className="standfirst">
-            Paste a public repository. GitRep reads its README the way a stranger would, then shows
-            you exactly where the points went.
+            Paste a public repository, or a username to grade everything they have published.
+            GitRep reads a README the way a stranger would, then shows you exactly where the
+            points went.
           </p>
 
           <GradeForm
@@ -93,7 +95,13 @@ export default function App() {
         {rubric && <Rubric checks={rubric.checks} total={rubric.total} />}
       </section>
 
-      <div ref={reportRef}>{report && <Report report={report} key={report.repo.name} />}</div>
+      <div ref={reportRef}>
+        {report?.kind === "profile" ? (
+          <ProfileReport report={report} onPickRepo={pickExample} key={report.owner.login} />
+        ) : (
+          report && <Report report={report} key={report.repo.name} />
+        )}
+      </div>
 
       <footer className="footer">
         <span>Reads public repositories through the GitHub API. Nothing is stored.</span>
