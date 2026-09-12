@@ -10,6 +10,9 @@ the things a first-time visitor notices: a README with no setup commands, or a w
 badges where a screenshot should be. What comes back is an itemised ledger rather than a
 number you have to take on faith.
 
+**Live at [getgitrep.vercel.app](https://getgitrep.vercel.app).** Paste any public repo, or open
+`?repo=owner/name` to link straight to a graded report.
+
 [![CI](https://github.com/SamGabriel-Here/GitRep/actions/workflows/ci.yml/badge.svg)](https://github.com/SamGabriel-Here/GitRep/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
