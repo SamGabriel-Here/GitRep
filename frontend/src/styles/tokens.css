@@ -35,10 +35,11 @@
   --step-0: clamp(0.88rem, 0.85rem + 0.15vw, 0.95rem);
   --step-1: clamp(0.95rem, 0.9rem + 0.25vw, 1.06rem);
   --step-2: clamp(1.3rem, 1.15rem + 0.7vw, 1.75rem);
-  --step-3: clamp(1.9rem, 1.4rem + 2.4vw, 3.4rem);
+  --step-3: clamp(1.9rem, 1.3rem + 2.9vw, 4.6rem);
 
-  --gutter: clamp(1.15rem, 4vw, 3rem);
-  --measure: 34rem;
+  --gutter: clamp(1.15rem, 4vw, 3.5rem);
+  --measure: 38rem;
+  --shell: clamp(68rem, 46rem + 34vw, 96rem);
 
   color-scheme: light;
   font-family: var(--mono);

@@ -1,7 +1,7 @@
 /* ---------- shell ---------- */
 
 .shell {
-  max-width: 68rem;
+  max-width: var(--shell);
   margin: 0 auto;
   padding: 0 var(--gutter) 4rem;
 }
@@ -52,8 +52,8 @@
 .opening {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: clamp(2.25rem, 6vw, 4.5rem);
-  align-items: start;
+  gap: clamp(2.25rem, 6vw, 5.5rem);
+  align-items: center;
   padding: clamp(2.5rem, 8vh, 4.5rem) 0;
 }
 

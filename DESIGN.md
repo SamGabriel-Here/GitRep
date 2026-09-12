@@ -79,7 +79,7 @@ on this page is long-form prose.
 
 | Level | Token | Min → Max | Weight | Usage |
 |---|---|---|---|---|
-| Display | `--step-3` | 30.4px → 54.4px | 600 | Headline |
+| Display | `--step-3` | 30.4px → 73.6px | 600 | Headline |
 | Total | inline `clamp` | 56px → 104px | 700 | The score figure only |
 | H2 | `--step-2` | 20.8px → 28px | 600 | Repo name, verdict word |
 | H3 | `--step-1` | 15.2px → 17px | 600 | Panel and ledger heads |
@@ -102,14 +102,23 @@ mechanics, per the tokenize-intent rule.
 
 | Token | Value | Usage |
 |---|---|---|
-| `--gutter` | `clamp(1.15rem, 4vw, 3rem)` | Page side padding |
-| `--measure` | `34rem` | Max line length for prose |
-| Shell max width | `68rem` | Content column |
+| `--gutter` | `clamp(1.15rem, 4vw, 3.5rem)` | Page side padding |
+| `--measure` | `38rem` | Max line length for prose |
+| `--shell` | `clamp(68rem, 46rem + 34vw, 96rem)` | Content column |
+
+The shell is fluid rather than fixed. A 68rem column centred in a 1920px window
+left 416px of dead margin on each side, about 43% of the screen doing nothing, and the
+page read as small rather than spacious. It now widens with the viewport: 7% margins at
+1440px, 14% at 1920px, and it stops growing at 96rem so the ledger never sprawls. The
+headline's ceiling rose alongside it, because filling that space wants presence, not just a
+longer line.
 
 ### Grid
 
-- Opening: two columns, `minmax(0, 1.08fr) minmax(0, 0.92fr)`, gap `clamp(2.25rem, 6vw, 4.5rem)`.
-  The pitch is wider than the rubric on purpose, so the headline sets the reading order.
+- Opening: two columns, `minmax(0, 1.08fr) minmax(0, 0.92fr)`, gap `clamp(2.25rem, 6vw, 5.5rem)`,
+  vertically centred. The pitch is wider than the rubric on purpose, so the headline sets the
+  reading order. Centring matters: the rubric panel is roughly 200px taller than the pitch,
+  and aligning to the start dumped all of that difference into one void under the input.
 - Report and ledger: single column. The ledger row is a flex cluster whose leader absorbs all
   slack, which is what keeps figures flush right at every width.
 - Breakpoints: **860px** (opening collapses to one column) and **520px** (input stacks above
