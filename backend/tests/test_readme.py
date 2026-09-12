@@ -86,3 +86,22 @@ def test_best_matching_section_wins_over_document_order():
     doc = parse("## Requirements\n\nPython 3.12.\n\n## Installation\n\n```bash\npip install x\n```\n")
     patterns = (re.compile(r"\brequirements?\b"), re.compile(r"\binstall(?:ation)?\b"))
     assert doc.find_section(patterns).heading.text == "Installation"
+
+
+def test_badges_in_a_heading_are_not_heading_words():
+    """React's H1 is its title plus a row of badge images.
+
+    Left in, the alt text becomes heading words, and a heading reading
+    "React ... GitHub license ... Build Status" can match a setup pattern. The
+    project title then counts as an install section.
+    """
+    doc = parse(
+        "# React &middot; ![GitHub license](https://img.shields.io/badge/l-MIT-blue) "
+        "[![Build Status](https://img.shields.io/badge/build-passing-green)](https://ci.example.com)\n\n"
+        "Some prose.\n"
+    )
+    assert doc.headings[0].text == "React"
+
+
+def test_html_entities_do_not_survive_in_a_heading():
+    assert parse("## Setup &amp; teardown\n\ntext\n").headings[0].text == "Setup teardown"

@@ -245,3 +245,50 @@ def test_an_empty_profile_does_not_divide_by_zero():
     assert report["average"] == 0
     assert report["habits"] == []
     assert report["repos"] == []
+
+
+@pytest.mark.parametrize(
+    "heading",
+    [
+        "Installation", "Setup", "Set up", "Getting started", "Quick start",
+        "Prerequisites", "Requirements", "Build from source", "Building", "Build",
+        "Deploying", "Deployment", "Local development",
+        "Running", "Run", "Running it", "Run the app", "Running the project",
+        "Running locally",
+    ],
+)
+def test_every_common_setup_heading_counts(heading):
+    """The matcher used to know "Installation" and miss "Running it".
+
+    A README that documents itself perfectly under a heading the rubric had
+    never heard of was told it had no setup instructions, which is the worst
+    kind of wrong: confidently specific and unactionable.
+    """
+    readme = f"# Tool\n\n## {heading}\n\n```bash\nnpm install\n```\n"
+    assert by_id(engine.analyse(readme, repo()), "install")["status"] == "pass"
+
+
+@pytest.mark.parametrize(
+    "heading",
+    ["Running the tests", "Run the tests", "Running tests", "Testing", "Tests", "Uninstall"],
+)
+def test_a_test_section_is_not_setup_instructions(heading):
+    """Widening the matcher must not swallow the test section.
+
+    Crediting "Running the tests" as setup would tell someone their install
+    docs exist when they do not.
+    """
+    readme = f"# Tool\n\n## {heading}\n\n```bash\npytest\n```\n"
+    assert by_id(engine.analyse(readme, repo()), "install")["status"] == "fail"
+
+
+def test_a_badge_laden_title_is_not_setup_instructions():
+    """The widened matcher plus unstripped badge alt text briefly scored
+    facebook/react as having copyable install commands in its H1."""
+    readme = (
+        "# React &middot; ![GitHub license](https://img.shields.io/badge/l-MIT-blue) "
+        "[![Build Status](https://img.shields.io/badge/build-passing-green)](https://ci.example.com)\n\n"
+        "A library for building user interfaces.\n\n"
+        "## Documentation\n\nRead the docs.\n"
+    )
+    assert by_id(engine.analyse(readme, repo()), "install")["status"] == "fail"
