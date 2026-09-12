@@ -19,6 +19,22 @@ densities. Passing checks sit quiet in plain ink; only deductions take colour. T
 never presented as a badge or a ring, it arrives last, under a rule, as the total of an
 itemised account you have already read.
 
+### Mark
+
+`docs/logo.svg`, also the favicon, is that same ledger row compressed into a tile: two rows
+of label, dotted leader and figure, closed by the heavier rule that means "total". One
+figure is in the deduction accent, because a mark for this product should show a repo losing
+a point rather than passing everything.
+
+It is drawn on the ink tile in both themes rather than inverting, so one file serves the
+favicon, the README and anywhere else it is dropped. The tile carries a 1.5px
+`--paper` edge at 18% opacity: without it the mark disappears against a dark page, which it
+did on the first attempt. It holds together down to 32px and reads as a document at 16px.
+
+There is deliberately no mark in the app's own masthead. The Fraunces wordmark is enough
+there, the rubric panel already shows the ledger row at full size, and a 22px repetition of
+it beside the wordmark was decoration rather than information.
+
 ## 2. Color
 
 Two grounds, one system. Light is the default because a graded document is read on paper.
