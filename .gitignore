@@ -14,3 +14,6 @@ dist/
 .vscode/
 .idea/
 .DS_Store
+
+# Design tooling: prototypes, review captures, caches (local only)
+.impeccable/

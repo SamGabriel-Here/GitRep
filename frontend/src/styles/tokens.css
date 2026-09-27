@@ -1,109 +1,105 @@
-/* Two grounds, one design. Light is the default: this is a graded document,
-   and documents are read on paper. Dark keeps the same structure on ink. */
-
-:root[data-theme="light"] {
-  --paper: #e9eae6;
-  --sheet: #f4f5f1;
-  --ink: #1c2119;
-  --ink-soft: #4f564c;
-  --ink-faint: #646b61;
-  --rule: #c4c8bf;
-  --rule-faint: #d6d9d1;
-  --deduct: #8c2f23;
-  --deduct-wash: rgba(140, 47, 35, 0.07);
-  --focus: #1c2119;
-}
-
-:root[data-theme="dark"] {
-  --paper: #14181a;
-  --sheet: #1b2023;
-  --ink: #e6e8e3;
-  --ink-soft: #9aa29b;
-  --ink-faint: #7d857f;
-  --rule: #313839;
-  --rule-faint: #252b2d;
-  --deduct: #e2705a;
-  --deduct-wash: rgba(226, 112, 90, 0.11);
-  --focus: #e6e8e3;
-}
+/* The broadcast package. One dark ground, white slabs for anything you can
+   press or anything the graphic is naming, and three sector states that
+   never appear on a control: full marks, points lost, nothing earned. */
 
 :root {
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --ground: #0b0c0f;
+  --panel: rgba(17, 18, 23, 0.92);
+  --panel-solid: #111217;
+  --line: #262830;
+  --line-2: #3a3d46;
+  --ink: #f2f2ee;
+  --ink-2: #a9acb4;
+  --ink-3: #868a94;
+  --slab: #f2f2ee;
+  --slab-ink: #0b0c0f;
 
-  --step--1: clamp(0.78rem, 0.755rem + 0.12vw, 0.83rem);
-  --step-0: clamp(0.88rem, 0.85rem + 0.15vw, 0.95rem);
-  --step-1: clamp(0.95rem, 0.9rem + 0.25vw, 1.06rem);
-  --step-2: clamp(1.3rem, 1.15rem + 0.7vw, 1.75rem);
-  --step-3: clamp(1.9rem, 1.3rem + 2.9vw, 4.6rem);
+  --full: #7a3cf0; /* full marks: a clean sector */
+  --part: #ffcf1a; /* points lost */
+  --part-ink: #6b4600; /* points lost, set on a white slab */
+  --unlit: #30333b; /* not run yet */
+  --none-edge: #5a5e69; /* nothing earned: an outline, never a fill */
+  --team: #868a94; /* a repository's language colour, set inline */
 
-  --gutter: clamp(1.15rem, 4vw, 3.5rem);
-  --measure: 38rem;
-  --shell: clamp(68rem, 46rem + 34vw, 96rem);
+  --cond: "Saira", "Arial Narrow", system-ui, sans-serif;
+  --mono: "Red Hat Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  color-scheme: light;
-  font-family: var(--mono);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --wipe: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --edge: 28px;
+  --tower-w: 372px;
+  --content-left: calc(var(--edge) * 2 + var(--tower-w));
+
+  color-scheme: dark;
 }
 
-:root[data-theme="dark"] {
-  color-scheme: dark;
+@media (max-width: 1240px) {
+  :root {
+    --tower-w: 320px;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--ground);
+  scrollbar-color: var(--line-2) var(--ground);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
-  font-size: var(--step-0);
-  background: var(--paper);
+  background: var(--ground);
   color: var(--ink);
+  font-family: var(--cond);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--serif);
-  font-variation-settings: "opsz" 128, "WONK" 1, "SOFT" 12;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.08;
-  margin: 0;
-  text-wrap: balance;
+::selection {
+  background: var(--slab);
+  color: var(--slab-ink);
 }
 
-p {
-  margin: 0;
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
-a {
-  color: inherit;
-  text-decoration-color: var(--rule);
-  text-underline-offset: 0.25em;
-}
-
-a:hover {
-  text-decoration-color: currentColor;
-}
-
-button {
+button,
+input {
   font: inherit;
   color: inherit;
 }
 
-:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 3px;
-  border-radius: 1px;
+a {
+  color: inherit;
+  text-underline-offset: 3px;
 }
 
-::selection {
-  background: var(--ink);
-  color: var(--paper);
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+code,
+pre {
+  font-family: var(--mono);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
