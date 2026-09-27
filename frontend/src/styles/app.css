@@ -42,6 +42,7 @@
 }
 
 .wordmark {
+  font-family: var(--cond);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -69,6 +70,7 @@
 }
 
 .cue {
+  font-family: var(--cond);
   flex: none;
   background: none;
   border: 0;
@@ -158,6 +160,7 @@
 }
 
 .tower-head {
+  font-family: var(--cond);
   flex: none;
   display: flex;
   align-items: baseline;
@@ -210,6 +213,7 @@
 }
 
 .row-in {
+  font-family: var(--cond);
   display: grid;
   grid-template-columns: 28px 6px minmax(0, 1fr) auto;
   align-items: center;
@@ -246,6 +250,7 @@ button.row-in:hover {
 }
 
 .row-head {
+  font-family: var(--cond);
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr) auto;
   align-items: center;
@@ -455,18 +460,20 @@ button.row-in:hover {
 
 .namebar b {
   min-width: 0;
-  padding: 10px 16px 8px;
+  padding: 9px 16px 9px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: var(--display);
   font-weight: 800;
-  font-stretch: 76%;
-  font-size: 30px;
+  font-stretch: 85%;
+  font-size: 28px;
   line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
 .namebar span {
+  font-family: var(--cond);
   display: flex;
   align-items: center;
   padding: 0 14px;
@@ -499,6 +506,7 @@ button.row-in:hover {
 }
 
 .facts dt {
+  font-family: var(--cond);
   color: var(--ink-3);
   font-weight: 600;
   font-stretch: 84%;
@@ -508,6 +516,7 @@ button.row-in:hover {
 }
 
 .facts dd {
+  font-family: var(--cond);
   margin: 0;
   font-weight: 700;
   font-stretch: 84%;
@@ -539,6 +548,7 @@ button.row-in:hover {
 }
 
 .sb small {
+  font-family: var(--cond);
   display: block;
   color: var(--ink-3);
   font-weight: 700;
@@ -549,6 +559,7 @@ button.row-in:hover {
 }
 
 .sb b {
+  font-family: var(--cond);
   display: block;
   margin-top: 4px;
   font-weight: 800;
@@ -606,16 +617,24 @@ button.row-in:hover {
 .big {
   display: flex;
   align-items: baseline;
+  font-family: var(--display);
   font-weight: 800;
-  font-stretch: 70%;
+  font-stretch: 85%;
   font-size: clamp(110px, 14vw, 210px);
   line-height: 0.8;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.05em;
   font-variant-numeric: tabular-nums;
 }
 
+/* The figure's tight tracking also trails its last digit; give it back
+   so the unit never touches a wide numeral like 2. */
+.big span {
+  margin-right: 0.05em;
+}
+
 .big small {
-  margin-left: 0.15em;
+  font-family: var(--cond);
+  margin-left: 0.3em;
   color: var(--ink-2);
   font-stretch: 80%;
   font-size: 0.2em;
@@ -628,16 +647,20 @@ button.row-in:hover {
   padding-bottom: 14px;
 }
 
+.band::first-letter {
+  text-transform: uppercase;
+}
+
 .band {
   display: inline-block;
-  padding: 8px 14px 6px;
+  padding: 7px 14px 7px;
   background: var(--slab);
   color: var(--slab-ink);
+  font-family: var(--display);
   font-weight: 800;
-  font-stretch: 76%;
-  font-size: 26px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-stretch: 85%;
+  font-size: 24px;
+  letter-spacing: -0.01em;
 }
 
 .verdict p {
@@ -647,6 +670,7 @@ button.row-in:hover {
 }
 
 .hint {
+  font-family: var(--cond);
   margin-top: 30px;
   color: var(--ink-3);
   font-weight: 600;
@@ -695,15 +719,17 @@ button.row-in:hover {
 }
 
 .third-head h2 {
+  font-family: var(--display);
   font-weight: 800;
-  font-stretch: 76%;
+  font-stretch: 85%;
   font-size: 34px;
   line-height: 1.02;
-  text-transform: uppercase;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
 .third-pts {
+  font-family: var(--cond);
   flex: none;
   padding: 6px 10px 5px;
   font-weight: 800;
@@ -740,6 +766,7 @@ button.row-in:hover {
 }
 
 .third-meta {
+  font-family: var(--cond);
   padding: 6px 18px 14px;
   color: var(--ink-3);
   font-weight: 600;
@@ -760,6 +787,7 @@ button.row-in:hover {
 }
 
 .third-fix b {
+  font-family: var(--cond);
   flex: none;
   font-weight: 800;
   font-stretch: 78%;
@@ -768,6 +796,7 @@ button.row-in:hover {
 }
 
 .third-clean {
+  font-family: var(--cond);
   padding: 10px 18px;
   background: var(--full);
   color: #fff;
@@ -795,6 +824,7 @@ button.row-in:hover {
 }
 
 .duel dt {
+  font-family: var(--cond);
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--ink);
@@ -825,6 +855,7 @@ button.row-in:hover {
 }
 
 .criteria b {
+  font-family: var(--cond);
   font-weight: 700;
   font-stretch: 84%;
   letter-spacing: 0.03em;
@@ -850,6 +881,7 @@ button.row-in:hover {
 }
 
 .starter-head {
+  font-family: var(--cond);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -888,6 +920,7 @@ button.row-in:hover {
 }
 
 .starter-link {
+  font-family: var(--cond);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -901,6 +934,7 @@ button.row-in:hover {
 }
 
 .copy {
+  font-family: var(--cond);
   flex: none;
   border: 0;
   background: var(--slab);
@@ -1026,6 +1060,7 @@ button.row-in:hover {
 }
 
 .tags b {
+  font-family: var(--cond);
   padding: 3px 7px 2px;
   background: var(--full);
   color: #fff;
@@ -1043,6 +1078,7 @@ button.row-in:hover {
 }
 
 .hunk-gap {
+  font-family: var(--cond);
   margin: 10px 0;
   padding: 0 8px;
   color: var(--ink-3);
@@ -1107,6 +1143,7 @@ button.row-in:hover {
 }
 
 .track figcaption {
+  font-family: var(--cond);
   margin-top: 6px;
   color: var(--ink-3);
   font-weight: 600;
@@ -1117,6 +1154,7 @@ button.row-in:hover {
 }
 
 .track-now {
+  font-family: var(--cond);
   position: absolute;
   top: -16px;
   left: calc(var(--x) * 100%);
@@ -1143,12 +1181,12 @@ button.row-in:hover {
 .closer {
   max-width: 16ch;
   margin-bottom: 22px;
+  font-family: var(--display);
   font-weight: 800;
-  font-stretch: 72%;
-  font-size: clamp(40px, 4.6vw, 76px);
-  line-height: 0.92;
-  letter-spacing: -0.005em;
-  text-transform: uppercase;
+  font-stretch: 85%;
+  font-size: clamp(40px, 4.6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
@@ -1192,6 +1230,7 @@ button.row-in:hover {
 }
 
 .versus-entry p {
+  font-family: var(--cond);
   color: var(--ink-2);
   font-weight: 600;
   font-stretch: 84%;
@@ -1248,13 +1287,13 @@ button.row-in:hover {
 }
 
 .headline {
-  max-width: 12ch;
+  max-width: 11ch;
+  font-family: var(--display);
   font-weight: 800;
-  font-stretch: 70%;
-  font-size: clamp(56px, 7.6vw, 124px);
-  line-height: 0.86;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
+  font-stretch: 85%;
+  font-size: clamp(54px, 6.8vw, 112px);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
@@ -1311,6 +1350,7 @@ button.row-in:hover {
 }
 
 .gradestrap label {
+  font-family: var(--cond);
   display: flex;
   align-items: center;
   padding: 0 14px;
@@ -1344,6 +1384,7 @@ button.row-in:hover {
 }
 
 .gradestrap button {
+  font-family: var(--cond);
   flex: none;
   padding: 0 24px;
   border: 0;
@@ -1371,6 +1412,7 @@ button.row-in:hover {
 }
 
 .examples span {
+  font-family: var(--cond);
   color: var(--ink-3);
   font-weight: 600;
   font-stretch: 84%;
@@ -1422,6 +1464,7 @@ button.row-in:hover {
 }
 
 .waiting-tag {
+  font-family: var(--cond);
   align-self: flex-start;
   margin-top: 20px;
   padding: 6px 12px 5px;
@@ -1593,6 +1636,11 @@ button.row-in:hover {
 }
 
 @media (max-width: 1240px) {
+  /* The result wraps taller here, so it starts below the sector boxes. */
+  .result {
+    top: calc(50% + 70px);
+  }
+
   .namebar b {
     font-size: 24px;
   }

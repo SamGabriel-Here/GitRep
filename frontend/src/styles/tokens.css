@@ -21,6 +21,10 @@
   --none-edge: #5a5e69; /* nothing earned: an outline, never a fill */
   --team: #868a94; /* a repository's language colour, set inline */
 
+  /* Three voices: sentence case for what is said, condensed capitals for
+     what the broadcast graphics label, mono for code and the README. */
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --text: "Bricolage Grotesque", system-ui, sans-serif;
   --cond: "Saira", "Arial Narrow", system-ui, sans-serif;
   --mono: "Red Hat Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
@@ -55,9 +59,9 @@ body {
   min-width: 320px;
   background: var(--ground);
   color: var(--ink);
-  font-family: var(--cond);
+  font-family: var(--text);
   font-size: 16px;
-  line-height: 1.45;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
