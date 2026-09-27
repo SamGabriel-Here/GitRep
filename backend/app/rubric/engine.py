@@ -12,6 +12,12 @@ from statistics import mean, median
 from app.rubric.checks import CHECKS
 from app.rubric.readme import parse
 
+# The README text travels with a repo report so the front end can show each
+# check's evidence in place. Capped, because a handful of READMEs run to
+# megabytes and the report should not.
+README_LINE_CAP = 1500
+README_CHAR_CAP = 150_000
+
 CATEGORIES = {
     "documentation": "Documentation",
     "discovery": "Discoverability",
@@ -76,8 +82,15 @@ def analyse(readme_text: str | None, repo: dict) -> dict:
             "code_blocks": len(readme.code_blocks),
             "images": len(readme.real_images),
             "badges": len(readme.badges),
+            **_readme_text(readme.raw),
         },
     }
+
+
+def _readme_text(raw: str) -> dict:
+    lines = raw.split("\n")
+    text = "\n".join(lines[:README_LINE_CAP])[:README_CHAR_CAP]
+    return {"text": text, "truncated": len(text) < len(raw.rstrip("\n"))}
 
 
 def _habit_detail(failing: int, partial: int, total: int) -> str:

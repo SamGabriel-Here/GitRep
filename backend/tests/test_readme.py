@@ -105,3 +105,62 @@ def test_badges_in_a_heading_are_not_heading_words():
 
 def test_html_entities_do_not_survive_in_a_heading():
     assert parse("## Setup &amp; teardown\n\ntext\n").headings[0].text == "Setup teardown"
+
+
+# ---------- source lines: evidence has to point at the README people wrote ----------
+
+LINED = """# Title
+<!-- a comment
+that spans two lines -->
+
+```bash
+pip install one
+pip install two
+```
+
+Setup
+-----
+
+![shot](docs/shot.png)
+See [the demo](https://thing.vercel.app).
+
+```js
+run()
+```
+"""
+
+
+def test_headings_keep_their_source_line_past_fences_comments_and_setext():
+    doc = parse(LINED)
+    assert [(h.text, h.source) for h in doc.headings] == [("Title", 1), ("Setup", 10)]
+
+
+def test_code_blocks_are_found_at_their_opening_fence():
+    doc = parse(LINED)
+    assert doc.code_lines == [5, 16]
+
+
+def test_images_and_links_know_their_line():
+    doc = parse(LINED)
+    assert doc.real_images[0].line == 13
+    assert doc.link_lines[doc.links.index("https://thing.vercel.app")] == 14
+
+
+def test_line_text_reads_the_original_markdown():
+    doc = parse(LINED)
+    assert doc.line_text(5) == "```bash"
+    assert doc.line_text(999) == ""
+
+
+def test_a_badge_host_on_a_deploy_domain_is_neither_screenshot_nor_demo():
+    """nanoGPT's Discord badge lives on dcbadge.vercel.app. It was scored as a
+    screenshot and as a live demo link; it is neither."""
+    doc = parse("[![](https://dcbadge.vercel.app/api/server/abc?style=flat)](https://discord.gg/abc)\n")
+    assert doc.real_images == []
+    assert len(doc.badges) == 1
+    assert doc.demo_links == []
+
+
+def test_a_real_demo_link_still_counts():
+    doc = parse("Try it at [the site](https://thing.vercel.app).")
+    assert doc.demo_links == ["https://thing.vercel.app"]

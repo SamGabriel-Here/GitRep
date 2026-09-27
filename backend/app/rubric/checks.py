@@ -9,7 +9,7 @@ scoring collapsed those into the same answer.
 from __future__ import annotations
 
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 
 from app.rubric.readme import Readme
@@ -67,6 +67,9 @@ class Check:
     earned: int
     detail: str
     fix: str
+    # Where in the README this check found what it credited, so a reader can
+    # see the evidence rather than take the points on trust.
+    evidence: list[dict] = field(default_factory=list)
 
     @property
     def lost(self) -> int:
@@ -83,6 +86,17 @@ class Check:
         data["lost"] = self.lost
         data["status"] = self.status
         return data
+
+
+def _mark(readme: Readme, line: int, kind: str) -> dict:
+    return {"line": line, "kind": kind, "text": readme.line_text(line)}
+
+
+def _section_marks(readme: Readme, section) -> list[dict]:
+    marks = [_mark(readme, section.heading.source, "heading")]
+    if section.code_lines:
+        marks.append(_mark(readme, section.code_lines[0], "code"))
+    return marks
 
 
 def _band(words: int, bands: tuple[tuple[int, int], ...], top: int) -> int:
@@ -122,7 +136,8 @@ def _readme_structure(readme: Readme, repo: dict) -> Check:
     else:
         detail = f"{count} heading{'s' if count != 1 else ''} organising the page."
     fix = "" if earned >= 8 else "Break the README into headed sections so people can skim to what they need."
-    return Check("readme_structure", "documentation", "Structure", 8, earned, detail, fix)
+    evidence = [_mark(readme, h.source, "heading") for h in readme.headings[:12]]
+    return Check("readme_structure", "documentation", "Structure", 8, earned, detail, fix, evidence)
 
 
 def _install(readme: Readme, repo: dict) -> Check:
@@ -141,7 +156,8 @@ def _install(readme: Readme, repo: dict) -> Check:
         5: "Give setup its own heading, with the commands in a code block.",
         0: "Add a setup section with the commands needed to get it running.",
     }[earned]
-    return Check("install", "documentation", "Setup instructions", 12, earned, detail, fix)
+    evidence = _section_marks(readme, section) if section else []
+    return Check("install", "documentation", "Setup instructions", 12, earned, detail, fix, evidence)
 
 
 def _usage(readme: Readme, repo: dict) -> Check:
@@ -163,7 +179,11 @@ def _usage(readme: Readme, repo: dict) -> Check:
         4: "Add a usage section with a runnable example.",
         0: "Show what running this looks like, with input and output.",
     }[earned]
-    return Check("usage", "documentation", "Usage examples", 12, earned, detail, fix)
+    if section:
+        evidence = _section_marks(readme, section)
+    else:
+        evidence = [_mark(readme, line, "code") for line in readme.code_lines[:1]]
+    return Check("usage", "documentation", "Usage examples", 12, earned, detail, fix, evidence)
 
 
 def _media(readme: Readme, repo: dict) -> Check:
@@ -183,7 +203,8 @@ def _media(readme: Readme, repo: dict) -> Check:
         2: "Badges show status, not the product. Add a screenshot.",
         0: "Add a screenshot or a short GIF near the top.",
     }[earned]
-    return Check("media", "documentation", "Screenshots", 8, earned, detail, fix)
+    evidence = [_mark(readme, img.line, "image") for img in real[:4]]
+    return Check("media", "documentation", "Screenshots", 8, earned, detail, fix, evidence)
 
 
 def _description(readme: Readme, repo: dict) -> Check:
@@ -226,7 +247,11 @@ def _homepage(readme: Readme, repo: dict) -> Check:
         4: "Put that link in the repo's homepage field so it shows in the sidebar.",
         0: "Deploy it somewhere and link it. A live demo outperforms any description.",
     }[earned]
-    return Check("homepage", "discovery", "Live demo", 5, earned, detail, fix)
+    evidence = []
+    if demos:
+        line = readme.link_lines[readme.links.index(demos[0])]
+        evidence = [{**_mark(readme, line, "link"), "url": demos[0]}]
+    return Check("homepage", "discovery", "Live demo", 5, earned, detail, fix, evidence)
 
 
 def _license(readme: Readme, repo: dict) -> Check:
@@ -242,18 +267,24 @@ def _license(readme: Readme, repo: dict) -> Check:
 
 def _signals(readme: Readme, repo: dict) -> Check:
     found = []
+    evidence = []
     if any(hint in img.url.lower() for img in readme.badges for hint in CI_HINTS) or repo.get("has_workflows"):
         found.append("CI")
-    if repo.get("has_contributing") or readme.find_section(CONTRIBUTING):
+    contributing = readme.find_section(CONTRIBUTING)
+    if repo.get("has_contributing") or contributing:
         found.append("contributing guide")
-    if repo.get("has_tests") or readme.find_section(TESTING):
+    testing = readme.find_section(TESTING)
+    if repo.get("has_tests") or testing:
         found.append("tests")
+    for section in (contributing, testing):
+        if section:
+            evidence.append(_mark(readme, section.heading.source, "heading"))
 
     earned = _band(len(found), ((1, 0), (2, 4)), 7)
     listed = ", ".join(found)
     detail = f"{listed[:1].upper()}{listed[1:]}." if found else "No CI, contributing guide, or tests."
     fix = "" if earned >= 7 else "Add CI, a contributing guide, or visible tests. Each one says the project is maintained."
-    return Check("signals", "trust", "Project signals", 7, earned, detail, fix)
+    return Check("signals", "trust", "Project signals", 7, earned, detail, fix, evidence)
 
 
 def _recency(readme: Readme, repo: dict) -> Check:
