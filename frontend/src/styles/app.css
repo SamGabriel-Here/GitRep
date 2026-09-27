@@ -1357,13 +1357,8 @@ button.row-in:hover {
   transition: background-color 0.15s;
 }
 
-.gradestrap button:hover:not(:disabled) {
+.gradestrap button:hover {
   background: #fff;
-}
-
-.gradestrap button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 .examples {

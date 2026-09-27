@@ -335,7 +335,7 @@ export function BadgePanel({ name }) {
 
 // The only white action on the page. "a vs b" compares two repositories.
 // It stays white and pressable; an empty submit says what to paste instead.
-export function GradeStrap({ initial = "", onGo, busy = false, label = "Grade", id = "target", placeholder = "owner/repo or username", hint }) {
+export function GradeStrap({ initial = "", onGo, label = "Grade", id = "target", placeholder = "owner/repo or username", hint }) {
   const [value, setValue] = useState(initial);
   const [empty, setEmpty] = useState(false);
   const submit = (event) => {
@@ -366,9 +366,7 @@ export function GradeStrap({ initial = "", onGo, busy = false, label = "Grade", 
           autoCorrect="off"
           autoComplete="off"
         />
-        <button type="submit" disabled={busy}>
-          {busy ? "On track" : label}
-        </button>
+        <button type="submit">{label}</button>
       </form>
       {empty && (
         <p className="strap-error" id={`${id}-error`} role="alert">
