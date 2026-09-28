@@ -20,6 +20,7 @@ export function beatAt(s, [from, to], count) {
 export const beatMiddle = ([from, to], count, k) => from + (k + 0.5) * ((to - from) / count);
 
 // Each cue lights from its `from` onward; clicking it scrolls to its `at`.
+// The first cue must start at 0, the lowest position the stage reports.
 export const cueAt = (cues, s) => cues.findLast((cue) => s >= cue.from).id;
 
 // The previous position when nothing in it changed, so scrolling within a

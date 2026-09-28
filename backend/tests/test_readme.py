@@ -142,7 +142,7 @@ def test_code_blocks_are_found_at_their_opening_fence():
 
 def test_images_and_links_know_their_line():
     doc = parse(LINED)
-    assert doc.real_images[0].line == 13
+    assert doc.real_images[0].source == 13
     assert doc.link_lines[doc.links.index("https://thing.vercel.app")] == 14
 
 

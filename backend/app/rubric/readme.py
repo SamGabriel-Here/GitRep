@@ -96,7 +96,8 @@ class Heading:
 class Image:
     url: str
     alt: str
-    line: int = 0
+    # 1-based line in the original markdown, like Heading.source.
+    source: int = 0
 
     @property
     def is_badge(self) -> bool:
@@ -311,8 +312,8 @@ def parse(markdown: str | None) -> Readme:
     def source(match: re.Match) -> int:
         return line_map[body.count("\n", 0, match.start())]
 
-    images = [Image(url=m.group("url"), alt=m.group("alt"), line=source(m)) for m in _MD_IMAGE.finditer(body)]
-    images += [Image(url=m.group("url"), alt="", line=source(m)) for m in _HTML_IMAGE.finditer(body)]
+    images = [Image(url=m.group("url"), alt=m.group("alt"), source=source(m)) for m in _MD_IMAGE.finditer(body)]
+    images += [Image(url=m.group("url"), alt="", source=source(m)) for m in _HTML_IMAGE.finditer(body)]
 
     found = [(m.group("url"), source(m)) for m in _MD_LINK.finditer(body)]
     found += [(m.group("url"), source(m)) for m in _HTML_LINK.finditer(body)]

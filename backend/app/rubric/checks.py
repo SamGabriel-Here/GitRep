@@ -203,7 +203,7 @@ def _media(readme: Readme, repo: dict) -> Check:
         2: "Badges show status, not the product. Add a screenshot.",
         0: "Add a screenshot or a short GIF near the top.",
     }[earned]
-    evidence = [_mark(readme, img.line, "image") for img in real[:4]]
+    evidence = [_mark(readme, img.source, "image") for img in real[:4]]
     return Check("media", "documentation", "Screenshots", 8, earned, detail, fix, evidence)
 
 
