@@ -1298,8 +1298,8 @@ button.row-in:hover {
 }
 
 .headline.is-small {
-  max-width: 22ch;
-  font-size: clamp(36px, 4.6vw, 72px);
+  max-width: 24ch;
+  font-size: clamp(32px, 3.8vw, 58px);
   line-height: 0.92;
   overflow-wrap: anywhere;
 }
@@ -1466,6 +1466,7 @@ button.row-in:hover {
 .waiting-tag {
   font-family: var(--cond);
   align-self: flex-start;
+  width: fit-content;
   margin-top: 20px;
   padding: 6px 12px 5px;
   background: var(--slab);
@@ -1475,6 +1476,10 @@ button.row-in:hover {
   font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.race-control .lede {
+  margin-top: 16px;
 }
 
 .waiting-tag.is-flag {

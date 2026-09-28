@@ -21,38 +21,47 @@ colors:
   team-default: "#868a94"
 typography:
   display:
-    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
     fontSize: "clamp(110px, 14vw, 210px)"
     fontWeight: 800
     lineHeight: 0.8
-    letterSpacing: "-0.02em"
-    fontVariation: "'wdth' 70"
+    letterSpacing: "-0.05em"
+    fontVariation: "'wdth' 85"
     fontFeature: "'tnum'"
   headline:
-    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
-    fontSize: "clamp(56px, 7.6vw, 124px)"
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "clamp(54px, 6.8vw, 112px)"
     fontWeight: 800
-    lineHeight: 0.86
-    letterSpacing: "-0.01em"
-    fontVariation: "'wdth' 70"
+    lineHeight: 0.9
+    letterSpacing: "-0.035em"
+    fontVariation: "'wdth' 85"
   closer:
-    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
-    fontSize: "clamp(40px, 4.6vw, 76px)"
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "clamp(40px, 4.6vw, 72px)"
     fontWeight: 800
-    lineHeight: 0.92
-    fontVariation: "'wdth' 72"
+    lineHeight: 0.95
+    letterSpacing: "-0.03em"
+    fontVariation: "'wdth' 85"
   title:
-    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
     fontSize: "34px"
     fontWeight: 800
     lineHeight: 1.02
-    fontVariation: "'wdth' 76"
+    letterSpacing: "-0.025em"
+    fontVariation: "'wdth' 85"
   strap:
-    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
-    fontSize: "30px"
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "28px"
     fontWeight: 800
     lineHeight: 1
-    fontVariation: "'wdth' 76"
+    letterSpacing: "-0.02em"
+    fontVariation: "'wdth' 85"
+  band:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 800
+    letterSpacing: "-0.01em"
+    fontVariation: "'wdth' 85"
   row:
     fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
     fontSize: "14px"
@@ -61,10 +70,10 @@ typography:
     fontVariation: "'wdth' 84"
     fontFeature: "'tnum'"
   body:
-    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
     fontSize: "17px"
     fontWeight: 400
-    lineHeight: 1.45
+    lineHeight: 1.5
   label:
     fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
     fontSize: "12.5px"
@@ -145,7 +154,8 @@ components:
   band-slab:
     backgroundColor: "{colors.slab}"
     textColor: "{colors.slab-ink}"
-    padding: "8px 14px 6px"
+    typography: "{typography.band}"
+    padding: "7px 14px"
   error-inline:
     backgroundColor: "{colors.points-lost-yellow}"
     textColor: "{colors.on-yellow-ink}"
@@ -160,7 +170,7 @@ components:
 
 A repository's grade is a lap under live timing, drawn as a broadcast graphics package over black. One persistent timing tower (the rubric's eleven checks as rows) is reused by every view: home shows it at rest and unlit, a repo report lights it sector by sector, a profile turns it into habits, a comparison turns it into a head-to-head. Around it sit the other pieces a broadcast reuses all weekend: a top strip ("the bug") with view cues and eleven mini-sectors, white name straps, sector boxes, a final-classification score, and a lower third for each deduction carrying the copyable fix.
 
-The package is dense, hard-edged and condensed. Everything is uppercase Saira pulled narrow on its width axis, set in slabs and hairline-gridded panels with no radius and no shadow. Colour is not decoration; it is the timing state. Purple means a clean sector, yellow means points lost, an unlit grey segment means not run, and an outline means nothing earned. Monospace appears only where the README itself is quoted or a fix is handed over.
+The package is dense, hard-edged and condensed, and it speaks in three voices. What the broadcast says (headlines, closers, the score, check names, repository names, verdicts, sentences) is Bricolage Grotesque in sentence case, heavy and slightly narrowed, tracked tight. What the graphics label (tower, cues, keys, tags, buttons) is uppercase Saira pulled narrow on its width axis. Everything is set in slabs and hairline-gridded panels with no radius and no shadow. Colour is not decoration; it is the timing state. Purple means a clean sector, yellow means points lost, an unlit grey segment means not run, and an outline means nothing earned. Monospace appears only where the README itself is quoted or a fix is handed over.
 
 The build rejects the category default of score ring, card grid and traffic-light colours. There is no green anywhere; a gain colour was tried in the comparison and removed as a traffic-light regression.
 
@@ -168,7 +178,7 @@ The build rejects the category default of score ring, card grid and traffic-ligh
 - One dark ground, dark only; no light theme.
 - White slabs mark exactly two things: what you can press, and what the graphic is naming.
 - Three sector states (purple, yellow, outline) plus unlit, never on a control.
-- Condensed uppercase Saira throughout; Red Hat Mono for README text, inputs and fixes.
+- Sentence-case Bricolage Grotesque for what is said; condensed uppercase Saira for what the graphics label; Red Hat Mono for README text, inputs and fixes.
 - Zero radius, zero shadow, 1px hairlines; clip-path wipes for entrances.
 - A pinned scroll stage on wide screens; the same pieces stacked on narrow ones.
 
@@ -202,25 +212,31 @@ A black broadcast ground with near-white slabs and a two-colour timing code, pur
 
 ## Typography
 
-**Display Font:** Saira (variable width 62-100, weight 400-800), with Arial Narrow, system-ui
-**Body Font:** Saira at normal width
-**Label/Mono Font:** Red Hat Mono (400, 500), with ui-monospace, SFMono-Regular, Menlo
+**Display Font:** Bricolage Grotesque (variable: optical size 12-96 automatic, width 75-100, weight 400-800), with system-ui
+**Body Font:** Bricolage Grotesque at normal width, 16px/1.5 base
+**Label Font:** Saira (variable: width 75-90, weight 500-800), with Arial Narrow, system-ui
+**Mono Font:** Red Hat Mono (400, 500), with ui-monospace, SFMono-Regular, Menlo
 
-**Character:** A single condensed grotesque doing every job a timing graphic does, from the 210px classification figure down to 12px tower headers, varied by width axis (70% to 88%) as much as by size. The mono is the README's own voice: whatever the visitor typed or will paste back.
+**Character:** Three voices with separate jobs. Bricolage carries everything that is said, in sentence case: at 800 weight and 85% width with negative tracking it makes a dense, quirky display voice, and its optical sizing lets the same family read as plain text at 16-17px. Saira is the broadcast's label-and-figure voice, always condensed capitals on its width axis. The mono is the README's own voice: whatever the visitor typed or will paste back.
 
 ### Hierarchy
-- **Display** (800, clamp(110px, 14vw, 210px), 0.8, width 70%, tabular): the final-classification score only. It deliberately exceeds 6rem; it is the graphic, not a heading. The "/100" beside it drops to 0.2em in Ink 2.
-- **Headline** (800, clamp(56px, 7.6vw, 124px), 0.86, width 70%, max 12ch, balanced): the home headline. A small variant (clamp(36px, 4.6vw, 72px), max 22ch) carries loading and error states.
-- **Closer** (800, clamp(40px, 4.6vw, 76px), 0.92, width 72%, max 16ch): the badge and next-step closers.
-- **Title** (800, 34px, 1.02, width 76%): a lower third's check name; 28px on short or narrow screens.
-- **Strap** (800, 30px, 1, width 76%): the name strap; 24px under 1240px, 26px stacked. The band slab under the score uses the same voice at 26px.
-- **Row** (600, 14px, 0.03em, width 84%, tabular): tower rows; 13px on long towers.
-- **Body** (400, 17px, 1.45): standfirsts, ledes and verdicts, capped at 42-60ch. Lower-third detail runs at 16px, criteria and notes at 15px.
-- **Label** (600-800, 12-13px, 0.06-0.1em, width 78-84%, uppercase): cues, fact keys, sector-box heads, starter heads, figcaptions, scroll hints and button text.
-- **Mono** (400, 13-16px, 1.6): input text (16px), starter code, the badge snippet, evidence lines (14px, 1.75) and the footage.
+- **Display** (Bricolage 800, clamp(110px, 14vw, 210px), 0.8, width 85%, -0.05em, tabular): the final-classification score only. It deliberately exceeds 6rem; it is the graphic, not a heading. Its unit ("pts", "avg", or the leader in a comparison) is Saira capitals at 0.2em in Ink 2, held off the numeral (0.05em after the figure, 0.3em before the unit) so a wide digit never touches it. 100-170px under 1240px, 96-170px stacked.
+- **Headline** (Bricolage 800, clamp(54px, 6.8vw, 112px), 0.9, width 85%, -0.035em, max 11ch, balanced, sentence case): the home headline. A small variant (clamp(32px, 3.8vw, 58px), 0.92, max 24ch) carries loading and error states. clamp(46px, 13vw, 88px) stacked.
+- **Closer** (Bricolage 800, clamp(40px, 4.6vw, 72px), 0.95, width 85%, -0.03em, max 16ch): the badge and next-step closers. clamp(34px, 10vw, 56px) stacked.
+- **Title** (Bricolage 800, 34px, 1.02, width 85%, -0.025em): a lower third's check name in sentence case; 28px on short or narrow screens.
+- **Strap** (Bricolage 800, 28px, 1, width 85%, -0.02em): the repository name on the name strap, in its real casing; 24px under 1240px, 26px stacked.
+- **Band** (Bricolage 800, 24px, width 85%, -0.01em): the verdict band under the score; its first letter is capitalised, the rest stays as written.
+- **Body** (Bricolage 400, 17px, 1.5): standfirsts, ledes and verdicts, capped at 42-60ch. Lower-third detail and the fix instruction run at 16px, criteria and notes at 15px.
+- **Row** (Saira 600, 14px, 0.03em, width 84%, tabular, uppercase): tower rows; 13px on long towers.
+- **Label** (Saira 600-800, 11-13px, 0.03-0.1em, width 75-88%, uppercase): tower head, cues, wordmark, meta lines, fact keys and values, sector-box labels and figures, tags, starter heads and links, button text, fix and clean labels, hints, figcaptions and the barcode needle.
+- **Mono** (400, 13-16px, 1.6): input text (16px), example repos, starter code, the badge snippet, evidence lines (14px, 1.75) and the footage.
 
 ### Named Rules
-**The Narrow-By-Axis Rule.** Condensation comes from Saira's width axis (font-stretch 70-88%), never from a second condensed family or from letter-spacing squeeze.
+**The Said-Versus-Labelled Rule.** Anything the broadcast says, a sentence or a name, is Bricolage in sentence case with its real casing. Anything the graphics label is Saira capitals. A display line is never uppercased, and a sentence is never set in Saira.
+
+**The Capitals-In-The-Tower Rule.** The tower head and tower rows stay in capitals, repository names included, as broadcast timing towers do. Everywhere else (straps, titles, sentences) a repository name keeps its real casing.
+
+**The Narrow-By-Axis Rule.** Condensation comes from the width axis, never from a fourth family: Saira labels run at font-stretch 75-88% with open tracking (0.03-0.1em); Bricolage display runs at 85% with tight negative tracking (-0.01 to -0.05em). Saira is never tracked negative; Bricolage is never tracked open.
 
 **The Tabular Figures Rule.** Every number that can change or be compared (score, tower values, pairs, sector boxes, facts, points chips) uses tabular figures so columns hold still during a replay.
 
@@ -232,7 +248,7 @@ Wide screens (1000px and up) run a **pinned stage**: a sticky 100vh viewport the
 
 The first viewport puts the tower at rest (unlit rubric) on the left, the huge headline bottom-anchored on the right with the input strap under it as the only white action, and the sector strip at the top right.
 
-Below 1000px the same components restack into a single **flow** column (max 760px, 16px gutters, 18px gap) with a sticky bug; tower and straps become in-flow, sector boxes go 2-up, type scales down. A max-height of 800px tightens rows to 32px and trims the lower third.
+Below 1000px the same components restack into a single **flow** column (max 760px, 16px gutters, 18px gap) with a sticky bug; tower and straps become in-flow, sector boxes go 2-up, type scales down. Between 1000px and 1240px the result block (score and band) drops to calc(50% + 70px) from the top so it clears the sector boxes. A max-height of 800px tightens rows to 32px and trims the lower third.
 
 Spacing is tight and structural: 1px hairline gaps inside grids, 2px seams between segments and cues, 6px between stacked straps and at sector breaks, 14-18px panel insets.
 
@@ -260,7 +276,7 @@ Every panel, strap, chip, segment, button and input is a hard rectangle with a 0
 
 ### Buttons
 - **Shape:** hard rectangle (0 radius), no border.
-- **Primary (the Grade button):** white slab with black condensed uppercase label, 800 weight, 0.1em tracking, 24px side padding, joined to the right end of the input strap. Always enabled; an empty submit shows the inline error instead of disabling the button.
+- **Primary (the Grade button):** white slab with a black Saira capitals label, 800 weight, 0.1em tracking, 24px side padding, joined to the right end of the input strap. Always enabled; an empty submit shows the inline error instead of disabling the button.
 - **Hover / Focus:** slab lifts to pure white in 0.15s; focus is a 2px ink outline at 3px offset site-wide.
 - **Copy:** smaller slab (12px label, 6px 12px padding) that sits in starter heads and at the end of the badge snippet.
 - **Inline / examples:** text buttons in Ink 2 with a hairline-strong underline that turns to current colour on hover; example repos are set in mono.
@@ -276,29 +292,32 @@ Every panel, strap, chip, segment, button and input is a hard rectangle with a 0
 - **Narrow:** below 1000px the label is visually hidden but still labels the input.
 
 ### Timing Tower (signature)
-- A panel-glass column with a white slab head (title left, figure right, tabular). Rows are 36px grids of position, chip or micro-sector strip, label, optional pair, and value, divided by hairlines. Section heads are 26px, Ink 3, 12px with 0.1em tracking.
+- A panel-glass column with a white slab head (title left, figure right, tabular). Rows are 36px grids of position, chip or micro-sector strip, label, optional pair, and value, divided by hairlines. Section heads are 26px, Ink 3, 12px with 0.1em tracking. Everything in the tower is Saira capitals, including the repository name in the head.
 - **Current row:** inverts to a white slab; loss values switch to points-lost ink.
 - **Dimmed row:** text stays at Ink 3 (readable); only chips and micro marks fade to 0.3 opacity.
 - **Compare:** a chip is solid white where the first repository leads, dashed where the second leads, unlit when level; values show ahead in 800 weight and behind in Ink 2.
 - **Motion:** rows wipe in on remount (0.42s, 26ms stagger). When a report lands the lap replays: chips light from unlit, 60ms apart after 200ms, while the score counts up over 1100ms with an ease-out quart.
 
 ### Top strip (the Bug)
-The mark and GitRep wordmark (17px, 800, uppercase), the view cues, and eleven 16x8px sector segments pushed right, with 6px breaks between the rubric's four categories. Segments take the sector states, stretch vertically on hover, and the current one gets a 1px ink outline. While grading, a single purple light sweeps the eleven segments (1.3s loop, 90ms stagger).
+The mark and GitRep wordmark (Saira 17px, 800, uppercase, width 88%), the view cues, and eleven 16x8px sector segments pushed right, with 6px breaks between the rubric's four categories. Segments take the sector states, stretch vertically on hover, and the current one gets a 1px ink outline. While grading, a single purple light sweeps the eleven segments (1.3s loop, 90ms stagger).
 
 ### Name Strap and Sector Boxes
-The name strap is a panel with an 8px team-colour side bar (dashed for the rival), the name at strap size, and a meta cell after a hairline. Facts sit below as a hairline grid of solid cells; flags read in yellow. Sector boxes are a 4-up hairline grid (2-up stacked) of label, tabular figure over its maximum, and a 4px bar that grows from the left (purple, or yellow when points were lost).
+The name strap is a panel with an 8px team-colour side bar (dashed for the rival), the name in the Bricolage strap voice with its real casing, and a Saira capitals meta cell after a hairline. Facts sit below as a hairline grid of solid cells in Saira capitals; flags read in yellow. Sector boxes are a 4-up hairline grid (2-up stacked) of a Saira label, a tabular Saira figure over its maximum, and a 4px bar that grows from the left (purple, or yellow when points were lost).
 
 ### Lower Third (signature)
-The deduction graphic: a panel-glass box, up to 760px, that wipes in from the left (0.5s, 14px travel) on every beat. Head holds the check name at title size and a points chip (yellow for a loss, purple for full marks, slab for neutral). Detail and a small uppercase meta line follow. A loss ends in the yellow fix strip ("Fix" label plus the instruction); a clean sector ends in the purple clean strip. A starter block below holds a copyable mono template on panel solid, max 150px tall (110px on short screens).
+The deduction graphic: a panel-glass box, up to 760px, that wipes in from the left (0.5s, 14px travel) on every beat. Head holds the check name in the Bricolage title voice, sentence case, and a Saira points chip (yellow for a loss, purple for full marks, slab for neutral). Bricolage detail and a small Saira capitals meta line follow. A loss ends in the yellow fix strip (a Saira "Fix" label plus the instruction in Bricolage 600); a clean sector ends in the purple clean strip. A starter block below holds a copyable mono template on panel solid, max 150px tall (110px on short screens).
+
+### Classification
+The score in the display voice with its Saira unit, then the verdict band: a white slab (7px 14px) in the Bricolage band voice, first letter capitalised, then verdict prose in Ink 2 at 17px, capped at 42ch.
 
 ### README Barcode (TrackMap)
 The README drawn as a barcode: one thin vertical mark per line along the bottom of the stage, 40px tall, its height and ink weight set by line kind (headings brightest, then images, then code). Evidence ticks sit on top in the sector colours, and a 2px ink needle labelled with the current line slides to the evidence being read (0.6s ease-out). It stays a barcode, one mark per line; it is not a circuit map.
 
 ### Evidence
-README hunks in mono at 14px/1.75: right-aligned line numbers in Ink 3, lines in Ink 3, hit lines lifted to Ink on a 6% ink wash with purple or yellow check tags at the end. Gaps between hunks are small uppercase Ink 3 labels. The window masks its top and bottom edges and scrolls with the stage.
+README hunks in mono at 14px/1.75: right-aligned line numbers in Ink 3, lines in Ink 3, hit lines lifted to Ink on a 6% ink wash with purple or yellow check tags at the end. Gaps between hunks are small Saira capitals in Ink 3. The window masks its top and bottom edges and scrolls with the stage.
 
 ### Status tags
-Loading and error states reuse the small headline with a slab tag beneath it: white for "On track", yellow for "Race control".
+Loading and error states reuse the small sentence-case headline with a Saira capitals slab tag beneath it, sized to its text: white for "On track", yellow for "Race control".
 
 ## Do's and Don'ts
 
@@ -310,13 +329,16 @@ Loading and error states reuse the small headline with a slab tag beneath it: wh
 - **Do** keep readable text at Ink 3 or brighter; fade only colour marks when de-emphasising.
 - **Do** distinguish a second repository by a dashed stripe, never by a colour.
 - **Do** use tabular figures for every score and value.
+- **Do** set headlines, closers, names, check titles and sentences in Bricolage sentence case (800, width 85%, negative tracking), and every label, cue, key, tag and button in Saira capitals with the family set explicitly.
+- **Do** keep the tower in capitals, repository names included, and keep real casing for names everywhere else.
 
 ### Don't:
 - **Don't** add green, red or any win/lose colour; the comparison regressed to traffic lights once and was reverted.
 - **Don't** use a score ring, a card grid or a gauge; the grade is a tower and a classification figure.
 - **Don't** round a corner or add a drop shadow to any panel, strap, chip or control.
 - **Don't** use purple or yellow on a button, link or heading.
-- **Don't** set UI chrome in mono or README content in Saira.
+- **Don't** set UI chrome in mono or README content in Bricolage or Saira.
+- **Don't** uppercase a Bricolage line, set a sentence or headline in Saira capitals, or add a fourth family.
 - **Don't** let footage or any background texture run under a figure, a strap or a lower third.
 - **Don't** add a light theme to the package without a new world decision; it is broadcast black only.
 
