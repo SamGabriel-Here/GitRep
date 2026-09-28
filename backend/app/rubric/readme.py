@@ -185,7 +185,7 @@ def _split_fences(text: str) -> tuple[str, list[str], list[int]]:
     """Replace every fenced block with a one-line marker, keeping line order.
 
     Collapsing a block shifts every later line, so the third value maps each
-    output line back to its 0-based line in the input. That is what lets a
+    output line back to its 1-based line in the input. That is what lets a
     check point at "line 19" of the README a person actually wrote.
     """
     out: list[str] = []
@@ -197,7 +197,7 @@ def _split_fences(text: str) -> tuple[str, list[str], list[int]]:
     lang = ""
     open_fence = False
 
-    for index, line in enumerate(text.split("\n")):
+    for number, line in enumerate(text.split("\n"), start=1):
         stripped = line.lstrip()
         if not open_fence:
             match = _FENCE_OPEN.match(stripped)
@@ -207,10 +207,10 @@ def _split_fences(text: str) -> tuple[str, list[str], list[int]]:
                 info = match.group(2).strip()
                 lang = info.split()[0].strip("{}.") if info else ""
                 open_fence = True
-                opened_at = index
+                opened_at = number
                 continue
             out.append(line)
-            line_map.append(index)
+            line_map.append(number)
             continue
 
         close = _FENCE_CLOSE.match(stripped)
@@ -277,7 +277,7 @@ def _build_sections(text: str, headings: list[Heading], line_map: list[int]) -> 
                 end = later.line
                 break
         body = "\n".join(lines[start:end])
-        code_lines = [line_map[k] + 1 for k in range(start, end) if lines[k] == CODE_MARK]
+        code_lines = [line_map[k] for k in range(start, end) if lines[k] == CODE_MARK]
         sections.append(Section(heading=heading, body=body, code_blocks=len(code_lines), code_lines=code_lines))
     return sections
 
@@ -309,7 +309,7 @@ def parse(markdown: str | None) -> Readme:
     body, langs, line_map = _split_fences(body)
 
     def source(match: re.Match) -> int:
-        return line_map[body.count("\n", 0, match.start())] + 1
+        return line_map[body.count("\n", 0, match.start())]
 
     images = [Image(url=m.group("url"), alt=m.group("alt"), line=source(m)) for m in _MD_IMAGE.finditer(body)]
     images += [Image(url=m.group("url"), alt="", line=source(m)) for m in _HTML_IMAGE.finditer(body)]
@@ -320,7 +320,7 @@ def parse(markdown: str | None) -> Readme:
     body = _promote_setext(body)
     headings = _collect_headings(body)
     for heading in headings:
-        heading.source = line_map[heading.line] + 1
+        heading.source = line_map[heading.line]
     sections = _build_sections(body, headings, line_map)
 
     prose = _to_prose(body)
@@ -336,6 +336,6 @@ def parse(markdown: str | None) -> Readme:
         images=images,
         links=[url for url, _ in found],
         link_lines=[line for _, line in found],
-        code_lines=[line_map[k] + 1 for k, text in enumerate(body.split("\n")) if text == CODE_MARK],
+        code_lines=[line_map[k] for k, text in enumerate(body.split("\n")) if text == CODE_MARK],
         has_video_embed=bool(re.search(r"<video\b", raw, re.I)),
     )

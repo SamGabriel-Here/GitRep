@@ -267,7 +267,6 @@ def _license(readme: Readme, repo: dict) -> Check:
 
 def _signals(readme: Readme, repo: dict) -> Check:
     found = []
-    evidence = []
     if any(hint in img.url.lower() for img in readme.badges for hint in CI_HINTS) or repo.get("has_workflows"):
         found.append("CI")
     contributing = readme.find_section(CONTRIBUTING)
@@ -276,9 +275,7 @@ def _signals(readme: Readme, repo: dict) -> Check:
     testing = readme.find_section(TESTING)
     if repo.get("has_tests") or testing:
         found.append("tests")
-    for section in (contributing, testing):
-        if section:
-            evidence.append(_mark(readme, section.heading.source, "heading"))
+    evidence = [_mark(readme, s.heading.source, "heading") for s in (contributing, testing) if s]
 
     earned = _band(len(found), ((1, 0), (2, 4)), 7)
     listed = ", ".join(found)
