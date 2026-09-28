@@ -25,7 +25,7 @@ export function sectorRows(checks, row) {
 // A check's status as a sector colour: full marks, points lost, nothing earned.
 export const TONE = { pass: "full", partial: "part", fail: "none" };
 
-// Mirrors the "Full marks when" column of the README's rubric table.
+// Mirrors the "Full marks" column of the README's rubric table.
 export const CRITERIA = {
   readme_depth: "600 or more words of prose, with badges and code set aside.",
   readme_structure: "Six or more headings organise the page.",
