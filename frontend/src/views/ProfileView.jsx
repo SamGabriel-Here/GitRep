@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Stage from "../components/Stage";
-import { scrollToScreen } from "../lib/scroll";
+import { beatAt, cueAt, keepSame, scrollToScreen } from "../lib/scroll";
 import { Bug, GradeStrap, NameStrap, Third, Tower } from "../components/broadcast";
 import { useCountUp } from "../hooks/useCountUp";
 import { shortName } from "../lib/format";
@@ -45,19 +45,14 @@ export default function ProfileView({ report, wide, calm, onGo }) {
   const CLOSE = [HABITS[1], HABITS[1] + 1];
   const SCREENS = CLOSE[1] + 1;
   const cues = [
-    { id: "standings", label: "Standings", at: 0 },
-    { id: "habits", label: "Habits", at: HABITS[0] + 0.05 },
-    { id: "next", label: "Next", at: CLOSE[0] + 0.5 },
+    { id: "standings", label: "Standings", at: 0, from: 0 },
+    { id: "habits", label: "Habits", at: HABITS[0] + 0.05, from: HABITS[0] - 0.25 },
+    { id: "next", label: "Next", at: CLOSE[0] + 0.5, from: CLOSE[0] - 0.1 },
   ];
   const [pos, setPos] = useState({ card: 0, now: -1, cue: "standings" });
   const average = useCountUp(report.average, calm);
 
-  const onScroll = (s) => {
-    const card = Math.min(beats - 1, Math.max(0, Math.floor((s - HABITS[0]) / PER)));
-    const now = s >= HABITS[0] && s < HABITS[1] ? card : -1;
-    const cue = s < HABITS[0] - 0.25 ? "standings" : s < CLOSE[0] - 0.1 ? "habits" : "next";
-    setPos((prev) => (prev.card === card && prev.now === now && prev.cue === cue ? prev : { card, now, cue }));
-  };
+  const onScroll = (s) => setPos((prev) => keepSame(prev, { ...beatAt(s, HABITS, beats), cue: cueAt(cues, s) }));
 
   // During a habit's beat, every repository shows that one check, and the
   // ones that already pass it step back.
@@ -147,7 +142,7 @@ export default function ProfileView({ report, wide, calm, onGo }) {
   const habit = habits[pos.card];
   return (
     <Stage screens={SCREENS} onScroll={onScroll} runRef={runRef}>
-      <Bug cues={cues} current={pos.cue} onCue={(id) => scrollToScreen(runRef.current, cues.find((c) => c.id === id).at, SCREENS)} />
+      <Bug cues={cues} current={pos.cue} onCue={(cue) => scrollToScreen(runRef.current, cue.at, SCREENS)} />
       {tower}
       <div className="ident">{strap}</div>
       <section className="layer result wipe" data-span={`0 ${HABITS[0] + 0.2}`}>

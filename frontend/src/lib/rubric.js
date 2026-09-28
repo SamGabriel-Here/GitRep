@@ -11,6 +11,17 @@ export const SECTORS = [
 
 export const sectorOf = (category) => SECTORS.find((s) => s.id === category) ?? SECTORS[0];
 
+// Tower rows: each sector's head row with its points, then a row per check,
+// built by `row(check, index in the rubric)`.
+export function sectorRows(checks, row) {
+  return SECTORS.flatMap((sector) => {
+    const members = checks.map((c, k) => [c, k]).filter(([c]) => c.category === sector.id);
+    if (!members.length) return [];
+    const points = members.reduce((sum, [c]) => sum + c.possible, 0);
+    return [{ key: sector.id, head: true, pos: sector.code, label: sector.label, value: points }, ...members.map(([c, k]) => row(c, k))];
+  });
+}
+
 // A check's status as a sector colour: full marks, points lost, nothing earned.
 export const TONE = { pass: "full", partial: "part", fail: "none" };
 
@@ -76,10 +87,11 @@ const INSTALL = {
   Kotlin: "./gradlew build",
 };
 
+const NODE_CI = ["      - uses: actions/setup-node@v4", "        with:", "          node-version: 20", "      - run: npm ci", "      - run: npm test"];
 const CI_STEPS = {
   Python: ["      - uses: actions/setup-python@v5", "        with:", "          python-version: \"3.12\"", "      - run: pip install -r requirements.txt pytest", "      - run: pytest"],
-  JavaScript: ["      - uses: actions/setup-node@v4", "        with:", "          node-version: 20", "      - run: npm ci", "      - run: npm test"],
-  TypeScript: ["      - uses: actions/setup-node@v4", "        with:", "          node-version: 20", "      - run: npm ci", "      - run: npm test"],
+  JavaScript: NODE_CI,
+  TypeScript: NODE_CI,
   Go: ["      - uses: actions/setup-go@v5", "      - run: go test ./..."],
   Rust: ["      - run: cargo test"],
 };

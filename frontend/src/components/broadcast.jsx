@@ -31,7 +31,7 @@ export function Bug({ cues = [], current, onCue, segments, onSegment, now = -1 }
       {cues.length > 0 && (
         <div className="cues">
           {cues.map((cue) => (
-            <button key={cue.id} type="button" className="cue" aria-current={cue.id === current || undefined} onClick={() => onCue(cue.id)}>
+            <button key={cue.id} type="button" className="cue" aria-current={cue.id === current || undefined} onClick={() => onCue(cue)}>
               {cue.label}
             </button>
           ))}
@@ -260,11 +260,18 @@ export function Starter({ start }) {
   );
 }
 
+// A README line's bar, as a share of the track's height.
+function barHeight(line) {
+  if (line.kind === "h") return 1;
+  if (line.kind === "i") return 0.84;
+  if (line.kind === "c") return 0.3 + line.size * 0.4;
+  return 0.18 + line.size * 0.6;
+}
+
 // C's README barcode, carried over as asked: one mark per line, taller for
 // headings, denser for code, a tick above every line that earned a point, and
 // a marker at the line the current check found.
 export function TrackMap({ shape, marks = [], current, label }) {
-  const n = Math.max(1, shape.length);
   if (!shape.length) {
     return (
       <figure className="track is-empty" aria-label={label}>
@@ -272,13 +279,14 @@ export function TrackMap({ shape, marks = [], current, label }) {
       </figure>
     );
   }
+  const n = shape.length;
   return (
     <figure className="track" aria-label={label}>
       <svg viewBox={`0 0 ${n} 40`} preserveAspectRatio="none" aria-hidden="true">
         {shape.map((line, i) => {
           if (line.kind === "b") return null;
-          const h = line.kind === "h" ? 1 : line.kind === "i" ? 0.84 : line.kind === "c" ? 0.3 + line.size * 0.4 : 0.18 + line.size * 0.6;
-          return <rect key={i} x={i} y={40 - h * 32} width={0.72} height={h * 32} className={`k-${line.kind}`} />;
+          const h = barHeight(line) * 32;
+          return <rect key={i} x={i} y={40 - h} width={0.72} height={h} className={`k-${line.kind}`} />;
         })}
         {marks.map((mark) => (
           <rect key={`${mark.line}-${mark.tone}`} x={mark.line - 1} y={0} width={Math.max(0.9, n / 320)} height={5} className={`tick is-${mark.tone}`} />

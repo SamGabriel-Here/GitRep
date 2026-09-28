@@ -68,8 +68,7 @@ export default function App() {
   if (state.status !== "done") return <OnTrack route={route} rubric={rubric} />;
 
   const { data } = state;
-  const key = Array.isArray(data) ? `${data[0].repo.name}|${data[1].repo.name}` : data.kind === "profile" ? data.owner.login : data.repo.name;
-  if (Array.isArray(data)) return <CompareView key={key} a={data[0]} b={data[1]} wide={wide} calm={calm} onGo={onGo} />;
-  if (data.kind === "profile") return <ProfileView key={key} report={data} wide={wide} calm={calm} onGo={onGo} />;
-  return <RepoView key={key} report={data} wide={wide} calm={calm} onGo={onGo} />;
+  if (Array.isArray(data)) return <CompareView key={`${data[0].repo.name}|${data[1].repo.name}`} a={data[0]} b={data[1]} wide={wide} calm={calm} onGo={onGo} />;
+  if (data.kind === "profile") return <ProfileView key={data.owner.login} report={data} wide={wide} calm={calm} onGo={onGo} />;
+  return <RepoView key={data.repo.name} report={data} wide={wide} calm={calm} onGo={onGo} />;
 }

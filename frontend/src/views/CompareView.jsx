@@ -1,12 +1,19 @@
 import { useRef, useState } from "react";
 import Stage from "../components/Stage";
-import { scrollToScreen } from "../lib/scroll";
+import { beatAt, beatMiddle, cueAt, keepSame, scrollToScreen } from "../lib/scroll";
 import { BadgePanel, Bug, GradeStrap, NameStrap, Third, Tower } from "../components/broadcast";
 import { useCountUp } from "../hooks/useCountUp";
 import { shortName } from "../lib/format";
 import { teamColour } from "../lib/rubric";
 
 const PER = 0.55;
+
+// One check's margin in the tower, from the first repository's side.
+function margin(d) {
+  if (d > 0) return { tone: "ahead", value: `+${d}`, valueTone: "ahead" };
+  if (d < 0) return { tone: "behind", value: `−${-d}`, valueTone: "behind" };
+  return { tone: "level", value: "=" };
+}
 
 function DiffThird({ x, y, a, b }) {
   const [behind, report] = x.earned < y.earned ? [x, a] : [y, b];
@@ -43,20 +50,15 @@ export default function CompareView({ a, b, wide, calm, onGo }) {
   const CLOSE = [DUEL[1], DUEL[1] + 1];
   const SCREENS = CLOSE[1] + 1;
   const cues = [
-    { id: "gap", label: "Gap", at: 0 },
-    { id: "duel", label: "Check by check", at: DUEL[0] + 0.05 },
-    { id: "badges", label: "Badges", at: CLOSE[0] + 0.5 },
+    { id: "gap", label: "Gap", at: 0, from: 0 },
+    { id: "duel", label: "Check by check", at: DUEL[0] + 0.05, from: DUEL[0] - 0.25 },
+    { id: "badges", label: "Badges", at: CLOSE[0] + 0.5, from: CLOSE[0] - 0.1 },
   ];
   const [pos, setPos] = useState({ card: 0, now: -1, cue: "gap" });
   const gap = a.score - b.score;
   const shown = useCountUp(Math.abs(gap), calm);
 
-  const onScroll = (s) => {
-    const card = Math.min(beats - 1, Math.max(0, Math.floor((s - DUEL[0]) / PER)));
-    const now = s >= DUEL[0] && s < DUEL[1] ? card : -1;
-    const cue = s < DUEL[0] - 0.25 ? "gap" : s < CLOSE[0] - 0.1 ? "duel" : "badges";
-    setPos((prev) => (prev.card === card && prev.now === now && prev.cue === cue ? prev : { card, now, cue }));
-  };
+  const onScroll = (s) => setPos((prev) => keepSame(prev, { ...beatAt(s, DUEL, beats), cue: cueAt(cues, s) }));
 
   const ahead = diffs.filter(([x, y]) => x.earned > y.earned).length;
   const behind = diffs.filter(([x, y]) => x.earned < y.earned).length;
@@ -65,22 +67,21 @@ export default function CompareView({ a, b, wide, calm, onGo }) {
   const current = pos.now >= 0 ? diffs[pos.now]?.[2] : -1;
   const jump = (k) => {
     const beat = diffs.findIndex(([, , idx]) => idx === k);
-    if (beat >= 0 && wide) scrollToScreen(runRef.current, DUEL[0] + (beat + 0.5) * PER, SCREENS);
+    if (beat >= 0 && wide) scrollToScreen(runRef.current, beatMiddle(DUEL, beats, beat), SCREENS);
   };
 
   const rows = a.checks.map((x, k) => {
-    const d = x.earned - b.checks[k].earned;
+    const y = b.checks[k];
+    const d = x.earned - y.earned;
     return {
       key: x.id,
       pos: k + 1,
-      tone: d > 0 ? "ahead" : d < 0 ? "behind" : "level",
+      ...margin(d),
       label: x.label,
-      pair: [x.earned, b.checks[k].earned],
-      value: d > 0 ? `+${d}` : d < 0 ? `−${-d}` : "=",
-      valueTone: d > 0 ? "ahead" : d < 0 ? "behind" : undefined,
+      pair: [x.earned, y.earned],
       now: k === current,
       onClick: d !== 0 && wide ? () => jump(k) : undefined,
-      aria: `${x.label}: ${nameA} ${x.earned}, ${nameB} ${b.checks[k].earned}`,
+      aria: `${x.label}: ${nameA} ${x.earned}, ${nameB} ${y.earned}`,
     };
   });
 
@@ -156,7 +157,7 @@ export default function CompareView({ a, b, wide, calm, onGo }) {
   const diff = diffs[pos.card];
   return (
     <Stage screens={SCREENS} onScroll={onScroll} runRef={runRef}>
-      <Bug cues={cues} current={pos.cue} onCue={(id) => scrollToScreen(runRef.current, cues.find((c) => c.id === id).at, SCREENS)} />
+      <Bug cues={cues} current={pos.cue} onCue={(cue) => scrollToScreen(runRef.current, cue.at, SCREENS)} />
       {tower}
       <div className="ident">{straps}</div>
       <section className="layer result wipe" data-span={`0 ${DUEL[0] + 0.2}`}>

@@ -33,11 +33,8 @@ export function loadRubric() {
 // ?repo= is still read so links from before profiles existed keep working.
 export function readRoute() {
   const params = new URLSearchParams(window.location.search);
-  const compare = params.get("compare");
-  if (compare && compare.includes(",")) {
-    const [a, b] = compare.split(",").map((s) => s.trim());
-    if (a && b) return { kind: "compare", a, b };
-  }
+  const [a, b] = (params.get("compare") ?? "").split(",").map((s) => s.trim());
+  if (a && b) return { kind: "compare", a, b };
   const target = (params.get("target") || params.get("repo") || "").trim();
   return target ? { kind: "target", target } : { kind: "home" };
 }

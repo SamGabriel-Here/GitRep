@@ -1,10 +1,10 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import Stage from "../components/Stage";
-import { scrollToScreen } from "../lib/scroll";
+import { beatAt, beatMiddle, cueAt, keepSame, scrollToScreen } from "../lib/scroll";
 import { BadgePanel, Bug, Evidence, GradeStrap, NameStrap, SectorBoxes, Starter, Third, Tower, TrackMap } from "../components/broadcast";
 import { useCountUp } from "../hooks/useCountUp";
 import { ago, compact, licence, shortName, verdict } from "../lib/format";
-import { SECTORS, TONE, evidenceHunks, readmeShape, sectorOf, starter, teamColour } from "../lib/rubric";
+import { TONE, evidenceHunks, readmeShape, sectorOf, sectorRows, starter, teamColour } from "../lib/rubric";
 
 // Screens scrolled at which each part of the report takes over.
 const LAP = [1, 6.5];
@@ -12,10 +12,10 @@ const README = [6.5, 8.6];
 const BADGE = [8.6, 10];
 const SCREENS = BADGE[1] + 1;
 const CUES = [
-  { id: "result", label: "Result", at: 0 },
-  { id: "lap", label: "Lap", at: LAP[0] + 0.05 },
-  { id: "readme", label: "README", at: README[0] + 0.4 },
-  { id: "badge", label: "Badge", at: BADGE[0] + 0.5 },
+  { id: "result", label: "Result", at: 0, from: 0 },
+  { id: "lap", label: "Lap", at: LAP[0] + 0.05, from: LAP[0] - 0.25 },
+  { id: "readme", label: "README", at: README[0] + 0.4, from: README[0] - 0.1 },
+  { id: "badge", label: "Badge", at: BADGE[0] + 0.5, from: BADGE[0] - 0.1 },
 ];
 
 export function CheckThird({ check, index, report }) {
@@ -62,39 +62,25 @@ export default function RepoView({ report, wide, calm, onGo }) {
   // On a phone only the credited lines themselves, so the badge stays within reach.
   const hunks = useMemo(() => evidenceHunks(report.readme?.text, checks, wide ? 2 : 0), [report, checks, wide]);
   const figure = useCountUp(report.score, calm);
-  const per = (LAP[1] - LAP[0]) / checks.length;
 
-  const onScroll = (s) => {
-    const card = Math.min(checks.length - 1, Math.max(0, Math.floor((s - LAP[0]) / per)));
-    const now = s >= LAP[0] && s < LAP[1] ? card : -1;
-    const cue = s < LAP[0] - 0.25 ? "result" : s < README[0] - 0.1 ? "lap" : s < BADGE[0] - 0.1 ? "readme" : "badge";
-    setPos((prev) => (prev.card === card && prev.now === now && prev.cue === cue ? prev : { card, now, cue }));
-  };
+  const onScroll = (s) => setPos((prev) => keepSame(prev, { ...beatAt(s, LAP, checks.length), cue: cueAt(CUES, s) }));
 
   const jumpCheck = (k) => {
-    if (wide) scrollToScreen(runRef.current, LAP[0] + (k + 0.5) * per, SCREENS);
+    if (wide) scrollToScreen(runRef.current, beatMiddle(LAP, checks.length, k), SCREENS);
     else document.getElementById(`check-${checks[k].id}`)?.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
   };
 
-  const rows = [];
-  for (const sector of SECTORS) {
-    const members = checks.map((c, k) => [c, k]).filter(([c]) => c.category === sector.id);
-    if (!members.length) continue;
-    rows.push({ key: sector.id, head: true, pos: sector.code, label: sector.label, value: members.reduce((sum, [c]) => sum + c.possible, 0) });
-    for (const [c, k] of members) {
-      rows.push({
-        key: c.id,
-        pos: k + 1,
-        tone: TONE[c.status],
-        label: c.label,
-        value: c.lost ? `−${c.lost}` : c.earned,
-        valueTone: c.lost ? "loss" : undefined,
-        now: k === pos.now,
-        onClick: () => jumpCheck(k),
-        aria: `${c.label}: ${c.earned} of ${c.possible}. Show this check.`,
-      });
-    }
-  }
+  const rows = sectorRows(checks, (c, k) => ({
+    key: c.id,
+    pos: k + 1,
+    tone: TONE[c.status],
+    label: c.label,
+    value: c.lost ? `−${c.lost}` : c.earned,
+    valueTone: c.lost ? "loss" : undefined,
+    now: k === pos.now,
+    onClick: () => jumpCheck(k),
+    aria: `${c.label}: ${c.earned} of ${c.possible}. Show this check.`,
+  }));
 
   const marks = [];
   const seen = new Set();
@@ -186,7 +172,7 @@ export default function RepoView({ report, wide, calm, onGo }) {
       <Bug
         cues={CUES}
         current={pos.cue}
-        onCue={(id) => scrollToScreen(runRef.current, CUES.find((c) => c.id === id).at, SCREENS)}
+        onCue={(cue) => scrollToScreen(runRef.current, cue.at, SCREENS)}
         segments={segments}
         now={pos.now}
         onSegment={jumpCheck}

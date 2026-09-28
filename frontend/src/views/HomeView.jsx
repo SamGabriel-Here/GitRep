@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import Stage from "../components/Stage";
-import { scrollToScreen } from "../lib/scroll";
+import { beatAt, beatMiddle, cueAt, keepSame, scrollToScreen } from "../lib/scroll";
 import { Bug, Examples, GradeStrap, Third, Tower } from "../components/broadcast";
-import { CRITERIA, SECTORS, SECTOR_WHY } from "../lib/rubric";
+import { CRITERIA, SECTORS, SECTOR_WHY, sectorRows } from "../lib/rubric";
 
 const EXAMPLES = ["karpathy/nanoGPT", "facebook/react", "SamGabriel-Here", "karpathy/nanoGPT vs karpathy/minGPT"];
 const PER = 0.9;
@@ -10,29 +10,20 @@ const RUBRIC = [0.9, 0.9 + SECTORS.length * PER];
 const CLOSE = [RUBRIC[1], RUBRIC[1] + 0.8];
 const SCREENS = CLOSE[1] + 1;
 const CUES = [
-  { id: "grade", label: "Grade", at: 0 },
-  { id: "rubric", label: "How it's timed", at: RUBRIC[0] + 0.1 },
+  { id: "grade", label: "Grade", at: 0, from: 0 },
+  { id: "rubric", label: "How it's timed", at: RUBRIC[0] + 0.1, from: RUBRIC[0] - 0.3 },
 ];
 
 // The rubric as an unlit tower: every check, every point on offer.
-function rubricRows(checks, lit = null) {
-  const rows = [];
-  for (const sector of SECTORS) {
-    const members = checks.filter((c) => c.category === sector.id);
-    if (!members.length) continue;
-    rows.push({ key: sector.id, head: true, pos: sector.code, label: sector.label, value: members.reduce((sum, c) => sum + c.possible, 0) });
-    for (const c of members) {
-      rows.push({
-        key: c.id,
-        pos: checks.indexOf(c) + 1,
-        tone: lit === sector.id ? "lit" : "unlit",
-        dim: lit != null && lit !== sector.id,
-        label: c.label,
-        value: c.possible,
-      });
-    }
-  }
-  return rows;
+function rubricRows(checks, lit) {
+  return sectorRows(checks, (c, k) => ({
+    key: c.id,
+    pos: k + 1,
+    tone: lit === c.category ? "lit" : "unlit",
+    dim: lit != null && lit !== c.category,
+    label: c.label,
+    value: c.possible,
+  }));
 }
 
 function SectorThird({ sector, checks }) {
@@ -71,18 +62,14 @@ export default function HomeView({ rubric, wide, onGo }) {
   const [pos, setPos] = useState({ sector: -1, cue: "grade" });
   const checks = rubric?.checks ?? [];
 
-  const onScroll = (s) => {
-    const sector = s < RUBRIC[0] || s >= RUBRIC[1] ? -1 : Math.min(SECTORS.length - 1, Math.floor((s - RUBRIC[0]) / PER));
-    const cue = s < RUBRIC[0] - 0.3 ? "grade" : "rubric";
-    setPos((prev) => (prev.sector === sector && prev.cue === cue ? prev : { sector, cue }));
-  };
+  const onScroll = (s) => setPos((prev) => keepSame(prev, { sector: beatAt(s, RUBRIC, SECTORS.length).now, cue: cueAt(CUES, s) }));
 
   const lit = pos.sector >= 0 ? SECTORS[pos.sector].id : null;
   // The eleven sectors at rest in the top bar; a click jumps to that sector's beat.
   const segments = checks.map((c) => ({ id: c.id, tone: lit === c.category ? "lit" : "unlit", label: `${c.label}, worth ${c.possible}` }));
   const toSector = (i) => {
     const k = SECTORS.findIndex((s) => s.id === checks[i]?.category);
-    if (k >= 0) scrollToScreen(runRef.current, RUBRIC[0] + (k + 0.5) * PER, SCREENS);
+    if (k >= 0) scrollToScreen(runRef.current, beatMiddle(RUBRIC, SECTORS.length, k), SCREENS);
   };
   const tower = checks.length ? (
     <Tower title="The lap" figure={`${rubric.total} pts`} rows={rubricRows(checks, lit)} mode="rubric" className="is-rest" label="What GitRep grades" />
@@ -112,7 +99,7 @@ export default function HomeView({ rubric, wide, onGo }) {
       <Bug
         cues={CUES}
         current={pos.cue}
-        onCue={(id) => scrollToScreen(runRef.current, CUES.find((c) => c.id === id).at, SCREENS)}
+        onCue={(cue) => scrollToScreen(runRef.current, cue.at, SCREENS)}
         segments={segments}
         onSegment={toSector}
       />
@@ -159,7 +146,7 @@ export function OnTrack({ route, rubric }) {
 
 // When a grade fails: say what happened and hand the input straight back.
 export function RaceControl({ message, route, onGo }) {
-  const initial = route.kind === "compare" ? `${route.a} vs ${route.b}` : route.kind === "target" ? route.target : "";
+  const initial = route.kind === "compare" ? `${route.a} vs ${route.b}` : route.target;
   return (
     <div className="flow race-control">
       <Bug />
