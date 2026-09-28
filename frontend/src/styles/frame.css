@@ -64,6 +64,48 @@
   flex: none;
 }
 
+/* The mark tallies: each stroke inks in left to right on the wipe curve, the
+   leader dots tick in, and the total rule settles last on the ease-out. Only
+   the start is held (backwards), so once written the mark is its plain self,
+   and reduced motion simply shows it. */
+.mark-svg.is-tally .ink {
+  animation: ink calc(var(--dur) * 1ms) var(--wipe) backwards;
+  animation-delay: calc(var(--at) * 1ms + 120ms);
+}
+
+.mark-svg.is-tally .ink:last-child {
+  animation-timing-function: var(--ease-out);
+}
+
+.mark-svg.is-tally .dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dot 140ms var(--ease-out) backwards;
+  animation-delay: calc(var(--at) * 1ms + 120ms);
+}
+
+@keyframes ink {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dot {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
 .cues {
   display: flex;
   gap: 2px;

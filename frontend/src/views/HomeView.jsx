@@ -130,7 +130,7 @@ export function OnTrack({ route, rubric }) {
   const profile = route.kind === "target" && !route.target.includes("/");
   return (
     <div className="waiting" aria-busy="true">
-      <Bug segments={(rubric?.checks ?? []).map((c) => ({ id: c.id, tone: "unlit", label: c.label }))} />
+      <Bug still segments={(rubric?.checks ?? []).map((c) => ({ id: c.id, tone: "unlit", label: c.label }))} />
       <div className="waiting-body" role="status">
         <h1 className="headline is-small">Grading {what}</h1>
         <p className="waiting-tag">On track</p>
@@ -149,7 +149,7 @@ export function RaceControl({ message, route, onGo }) {
   const initial = route.kind === "compare" ? `${route.a} vs ${route.b}` : route.target;
   return (
     <div className="flow race-control">
-      <Bug />
+      <Bug still />
       <section className="flow-hero" role="alert">
         <h1 className="headline is-small">{message}</h1>
         <p className="waiting-tag is-flag">Race control</p>

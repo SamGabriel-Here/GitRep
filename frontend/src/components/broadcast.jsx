@@ -3,29 +3,58 @@
 import { useState } from "react";
 import { sectorOf } from "../lib/rubric";
 
-export function Mark() {
+// The mark is a ledger: two rows of item, leader dots and figure (the second
+// figure in the deduction colour), closed by a total rule. With `tally` it is
+// written the way a sum is: each row left to right, then the total. `--at` is
+// each stroke's start and `--dur` its length, in ms.
+const ink = (at, dur) => ({ className: "ink", pathLength: 1, style: { "--at": at, "--dur": dur } });
+const dot = (at) => ({ className: "dot", opacity: ".5", style: { "--at": at } });
+
+export function Mark({ tally = false }) {
   return (
-    <svg viewBox="0 0 64 64" aria-hidden="true" className="mark-svg">
+    <svg viewBox="0 0 64 64" aria-hidden="true" className={`mark-svg${tally ? " is-tally" : ""}`}>
       <rect x=".75" y=".75" width="62.5" height="62.5" rx="14" fill="#1C2119" stroke="#E9EAE6" strokeOpacity=".18" strokeWidth="1.5" />
       <g fill="none" strokeLinecap="round">
-        <path d="M16 23h11" stroke="#E9EAE6" strokeWidth="4" />
-        <path d="M32 23h8" stroke="#E9EAE6" strokeWidth="2.4" strokeDasharray="0.1 3.6" opacity=".5" />
-        <path d="M44.5 23h3.5" stroke="#E9EAE6" strokeWidth="4" />
-        <path d="M16 34h7" stroke="#E9EAE6" strokeWidth="4" />
-        <path d="M28 34h12" stroke="#E9EAE6" strokeWidth="2.4" strokeDasharray="0.1 3.6" opacity=".5" />
-        <path d="M44.5 34h3.5" stroke="#E2705A" strokeWidth="4" />
-        <path d="M16 46h32" stroke="#E9EAE6" strokeWidth="5" />
+        <path d="M16 23h11" stroke="#E9EAE6" strokeWidth="4" {...ink(0, 180)} />
+        <path d="M44.5 23h3.5" stroke="#E9EAE6" strokeWidth="4" {...ink(280, 130)} />
+        <path d="M16 34h7" stroke="#E9EAE6" strokeWidth="4" {...ink(380, 150)} />
+        <path d="M44.5 34h3.5" stroke="#E2705A" strokeWidth="4" {...ink(650, 130)} />
+        <path d="M16 46h32" stroke="#E9EAE6" strokeWidth="5" {...ink(760, 340)} />
+      </g>
+      {/* The dotted leaders, one dot per path so each can tick in. Each keeps the
+          original dash pattern and its own opacity, or it renders a shade off. */}
+      <g fill="none" stroke="#E9EAE6" strokeWidth="2.4" strokeLinecap="round" strokeDasharray="0.1 3.6">
+        <path d="M32 23h.1" {...dot(150)} />
+        <path d="M35.7 23h.1" {...dot(190)} />
+        <path d="M39.4 23h.1" {...dot(230)} />
+        <path d="M28 34h.1" {...dot(480)} />
+        <path d="M31.7 34h.1" {...dot(520)} />
+        <path d="M35.4 34h.1" {...dot(560)} />
+        <path d="M39.1 34h.1" {...dot(600)} />
       </g>
     </svg>
   );
 }
 
+// Hovering or focusing the mark writes the sum again. A finished tally leaves
+// no animation behind to restart, so the class comes off and goes back on,
+// with a style read between so the browser sees it gone.
+function retally(event) {
+  const svg = event.currentTarget.querySelector(".mark-svg.is-tally");
+  if (!svg) return;
+  svg.classList.remove("is-tally");
+  svg.getBoundingClientRect();
+  svg.classList.add("is-tally");
+}
+
 // Top strip: the mark, the cues for this view, and the eleven mini-sectors.
-export function Bug({ cues = [], current, onCue, segments, onSegment, now = -1 }) {
+// The mark tallies as a view opens, except where nothing has been totalled
+// yet (`still`: the loading and error screens).
+export function Bug({ cues = [], current, onCue, segments, onSegment, now = -1, still = false }) {
   return (
     <nav className="bug" aria-label="GitRep">
-      <a className="wordmark" href="/" aria-label="GitRep, grade another repository">
-        <Mark />
+      <a className="wordmark" href="/" aria-label="GitRep, grade another repository" onPointerEnter={retally} onFocus={retally}>
+        <Mark tally={!still} />
         <span>GitRep</span>
       </a>
       {cues.length > 0 && (
