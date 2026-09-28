@@ -1,0 +1,504 @@
+/* Page-level pieces and adaptations: closers, home, loading and race
+   control, the stacked narrow layout, and the screen-size and motion rules.
+   Loaded last, because its media queries override the other two. */
+
+/* ---------- closers: badge, next steps ---------- */
+
+.badge-layer {
+  top: 50%;
+  left: var(--content-left);
+  right: var(--edge);
+  transform: translateY(-50%);
+}
+
+.closer {
+  max-width: 16ch;
+  margin-bottom: 22px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 85%;
+  font-size: clamp(40px, 4.6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.badge-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.badge-panel img {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+
+.snippet {
+  display: flex;
+  max-width: 760px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.snippet code {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  white-space: nowrap;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.snippet .copy {
+  padding: 0 16px;
+}
+
+.versus-entry {
+  max-width: 640px;
+  margin-top: 30px;
+}
+
+.versus-entry p {
+  font-family: var(--cond);
+  color: var(--ink-2);
+  font-weight: 600;
+  font-stretch: 84%;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.versus-entry .gradestrap-wrap {
+  margin-top: 8px;
+}
+
+.lede {
+  max-width: 56ch;
+  margin: 4px 0 0;
+  color: var(--ink-2);
+  font-size: 17px;
+}
+
+.lede a,
+.inline {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.note {
+  max-width: 60ch;
+  margin-top: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: 15px;
+}
+
+/* ---------- home ---------- */
+
+.home {
+  left: var(--content-left);
+  right: var(--edge);
+  bottom: 9vh;
+  max-width: 900px;
+}
+
+.home.is-close {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.headline {
+  max-width: 11ch;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 85%;
+  font-size: clamp(54px, 6.8vw, 112px);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.headline.is-small {
+  max-width: 24ch;
+  font-size: clamp(32px, 3.8vw, 58px);
+  line-height: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.standfirst {
+  max-width: 56ch;
+  margin-top: 22px;
+  color: var(--ink-2);
+  font-size: 17px;
+}
+
+.gradestrap-wrap {
+  position: relative;
+  max-width: 640px;
+  margin-top: 26px;
+}
+
+/* On the pinned stage the error hangs below the strap instead of pushing
+   the bottom-anchored block upward. */
+.stage .strap-error {
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.strap-error {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--part);
+  color: #161200;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.gradestrap {
+  display: flex;
+  max-width: 640px;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.gradestrap:focus-within {
+  border-color: var(--ink-2);
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.gradestrap label {
+  font-family: var(--cond);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  background: var(--unlit);
+  color: var(--ink);
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gradestrap input {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 16px;
+  caret-color: var(--ink);
+}
+
+.gradestrap input::placeholder {
+  color: var(--ink-3);
+}
+
+.gradestrap input:focus {
+  outline: none;
+}
+
+.gradestrap button {
+  font-family: var(--cond);
+  flex: none;
+  padding: 0 24px;
+  border: 0;
+  background: var(--slab);
+  color: var(--slab-ink);
+  cursor: pointer;
+  font-weight: 800;
+  font-stretch: 80%;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background-color 0.15s;
+}
+
+.gradestrap button:hover {
+  background: #fff;
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.examples span {
+  font-family: var(--cond);
+  color: var(--ink-3);
+  font-weight: 600;
+  font-stretch: 84%;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.examples button {
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 13px;
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 4px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.examples button:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+/* ---------- waiting and race control ---------- */
+
+.waiting {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.waiting .bug,
+.flow .bug {
+  position: sticky;
+  background: var(--ground);
+  border-bottom: 1px solid var(--line);
+}
+
+.waiting-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1100px;
+  padding: 0 var(--edge) 10vh;
+}
+
+.waiting-tag {
+  font-family: var(--cond);
+  align-self: flex-start;
+  width: fit-content;
+  margin-top: 20px;
+  padding: 6px 12px 5px;
+  background: var(--slab);
+  color: var(--slab-ink);
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.race-control .lede {
+  margin-top: 16px;
+}
+
+.waiting-tag.is-flag {
+  background: var(--part);
+  color: #161200;
+}
+
+/* While grading, a single light runs the eleven sectors. */
+.waiting .seg {
+  animation: sweep 1.3s linear infinite;
+  animation-delay: calc(var(--k, 0) * 90ms);
+}
+
+@keyframes sweep {
+  0%,
+  30%,
+  100% {
+    background: var(--unlit);
+  }
+  8% {
+    background: var(--full);
+  }
+}
+
+/* ---------- narrow: the same package, stacked ---------- */
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 16px 56px;
+}
+
+.flow .bug {
+  margin: 0 -16px;
+  padding: 14px 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flow .tower,
+.flow .ident {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: auto;
+  max-width: none;
+  max-height: none;
+}
+
+.flow .strap-group {
+  align-items: flex-start;
+}
+
+.flow .facts {
+  justify-content: flex-start;
+}
+
+.flow .namebar b {
+  font-size: 26px;
+}
+
+.flow .big {
+  font-size: clamp(96px, 30vw, 170px);
+}
+
+.flow .sectorboxes {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.flow-hero {
+  padding: 7vh 0 2vh;
+}
+
+.flow .headline {
+  font-size: clamp(46px, 13vw, 88px);
+}
+
+.flow-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.flow > * {
+  min-width: 0;
+}
+
+.flow-section > div {
+  scroll-margin-top: 80px;
+}
+
+.flow .third-head h2 {
+  font-size: 28px;
+}
+
+.flow .third-fix {
+  font-size: 15px;
+}
+
+.flow .closer {
+  font-size: clamp(34px, 10vw, 56px);
+}
+
+.flow .gradestrap button {
+  padding: 0 16px;
+}
+
+.flow .gradestrap input {
+  padding: 14px 12px;
+}
+
+/* On a phone the label steps out of sight (it still names the field for
+   screen readers) so the placeholder has the room to be read. */
+.flow .gradestrap label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.flow .ln {
+  grid-template-columns: 2.6em minmax(0, 1fr);
+}
+
+.flow .tags {
+  grid-column: 2;
+  justify-content: flex-start;
+}
+
+.flow .snippet {
+  flex-direction: column;
+}
+
+.flow .snippet .copy {
+  padding: 10px;
+}
+
+/* ---------- short and mid-width screens ---------- */
+
+@media (max-height: 800px) {
+  .row-in {
+    height: 32px;
+  }
+
+  .third-head h2 {
+    font-size: 28px;
+  }
+
+  .starter pre {
+    max-height: 110px;
+  }
+}
+
+@media (max-width: 1240px) {
+  /* The result wraps taller here, so it starts below the sector boxes. */
+  .result {
+    top: calc(50% + 70px);
+  }
+
+  .namebar b {
+    font-size: 24px;
+  }
+
+  .big {
+    font-size: clamp(100px, 12vw, 170px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .wipe {
+    clip-path: none;
+  }
+}

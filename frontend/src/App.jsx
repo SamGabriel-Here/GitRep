@@ -1,114 +1,74 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import "./styles/app.css";
-import { grade, loadRubric } from "./lib/api";
-import { targetFromUrl, putTargetInUrl } from "./lib/shareUrl";
-import { useTheme } from "./hooks/useTheme";
-import GradeForm from "./components/GradeForm";
-import Masthead from "./components/Masthead";
-import ProfileReport from "./components/ProfileReport";
-import Report from "./components/Report";
-import Rubric from "./components/Rubric";
+import { useEffect, useState } from "react";
+import { grade, loadRubric, navigate, readRoute, routeFor } from "./lib/api";
+import { shortName } from "./lib/format";
+import { CALM, WIDE, useMedia } from "./hooks/useMedia";
+import CompareView from "./views/CompareView";
+import HomeView, { OnTrack, RaceControl } from "./views/HomeView";
+import ProfileView from "./views/ProfileView";
+import RepoView from "./views/RepoView";
 
-const SOURCE_URL = "https://github.com/SamGabriel-Here/GitRep";
-const EXAMPLES = ["facebook/react", "SamGabriel-Here/GitRep", "SamGabriel-Here"];
+function titleFor(state) {
+  if (state.status !== "done") return "GitRep: every point, accounted for";
+  const { data } = state;
+  if (Array.isArray(data)) return `${shortName(data[0].repo.name)} vs ${shortName(data[1].repo.name)} · GitRep`;
+  if (data.kind === "profile") return `${data.owner.login} · average ${data.average} · GitRep`;
+  return `${shortName(data.repo.name)} · ${data.score}/100 · GitRep`;
+}
 
 export default function App() {
-  const [theme, toggleTheme] = useTheme();
-  const [target, setTarget] = useState(targetFromUrl);
-  const [report, setReport] = useState(null);
+  const [route, setRoute] = useState(readRoute);
   const [rubric, setRubric] = useState(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const reportRef = useRef(null);
+  const [state, setState] = useState({ status: "idle" });
+  const wide = useMedia(WIDE);
+  const calm = useMedia(CALM);
 
-  const run = useCallback(async (value) => {
-    const trimmed = value.trim();
-    if (!trimmed) return;
-
-    setBusy(true);
-    setError("");
-    setReport(null);
-
-    try {
-      const result = await grade(trimmed);
-      setReport(result);
-      putTargetInUrl(result.kind === "profile" ? result.owner.login : result.repo.name);
-    } catch (err) {
-      setError(err.message);
-      putTargetInUrl("");
-    } finally {
-      setBusy(false);
-    }
+  useEffect(() => {
+    const sync = () => setRoute(readRoute());
+    window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
   }, []);
 
   useEffect(() => {
     loadRubric().then(setRubric).catch(() => setRubric(null));
   }, []);
 
-  // Opening a shared link grades that repo straight away.
   useEffect(() => {
-    const shared = targetFromUrl();
-    if (shared) run(shared);
-  }, [run]);
-
-  useEffect(() => {
-    if (report && reportRef.current) {
-      reportRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (route.kind === "home") {
+      setState({ status: "idle" });
+      return undefined;
     }
-  }, [report]);
+    let live = true;
+    setState({ status: "loading" });
+    const job =
+      route.kind === "compare"
+        ? Promise.all([grade(route.a), grade(route.b)]).then((pair) => {
+            if (pair.some((r) => r.kind !== "repo")) throw new Error("Compare takes two repositories, like owner/one vs owner/two.");
+            return pair;
+          })
+        : grade(route.target);
+    job
+      .then((data) => live && setState({ status: "done", data }))
+      .catch((error) => live && setState({ status: "error", message: error.message }));
+    return () => {
+      live = false;
+    };
+  }, [route]);
 
-  const pickExample = (value) => {
-    setTarget(value);
-    run(value);
+  useEffect(() => {
+    document.title = titleFor(state);
+  }, [state]);
+
+  const onGo = (value) => {
+    const next = routeFor(value);
+    if (next) navigate(next);
   };
 
-  return (
-    <div className="shell">
-      <Masthead theme={theme} onToggleTheme={toggleTheme} sourceUrl={SOURCE_URL} />
+  if (route.kind === "home") return <HomeView rubric={rubric} wide={wide} onGo={onGo} />;
+  if (state.status === "error") return <RaceControl message={state.message} route={route} onGo={onGo} />;
+  if (state.status !== "done") return <OnTrack route={route} rubric={rubric} />;
 
-      <section className="opening">
-        <div className="pitch">
-          <h1 className="headline">Every repo starts at 100.</h1>
-          <p className="standfirst">
-            Paste a public repository, or a username to grade everything they have published.
-            GitRep reads a README the way a stranger would, then shows you exactly where the
-            points went.
-          </p>
-
-          <GradeForm
-            value={target}
-            onChange={setTarget}
-            onSubmit={() => run(target)}
-            onPickExample={pickExample}
-            examples={EXAMPLES}
-            busy={busy}
-          />
-
-
-          {error && (
-            <p className="error" role="alert">
-              {error}
-            </p>
-          )}
-        </div>
-
-        {rubric && <Rubric checks={rubric.checks} total={rubric.total} />}
-      </section>
-
-      <div ref={reportRef}>
-        {report?.kind === "profile" ? (
-          <ProfileReport report={report} onPickRepo={pickExample} key={report.owner.login} />
-        ) : (
-          report && <Report report={report} key={report.repo.name} />
-        )}
-      </div>
-
-      <footer className="footer">
-        <span>Reads public repositories through the GitHub API. Nothing is stored.</span>
-        <a href={SOURCE_URL} target="_blank" rel="noreferrer">
-          SamGabriel-Here/GitRep
-        </a>
-      </footer>
-    </div>
-  );
+  const { data } = state;
+  if (Array.isArray(data)) return <CompareView key={`${data[0].repo.name}|${data[1].repo.name}`} a={data[0]} b={data[1]} wide={wide} calm={calm} onGo={onGo} />;
+  if (data.kind === "profile") return <ProfileView key={data.owner.login} report={data} wide={wide} calm={calm} onGo={onGo} />;
+  return <RepoView key={data.repo.name} report={data} wide={wide} calm={calm} onGo={onGo} />;
 }

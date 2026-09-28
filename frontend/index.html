@@ -6,29 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="GitRep grades any public GitHub repository against a 100-point rubric and itemises exactly where the points went."
+      content="GitRep grades any public GitHub repository against a 100-point rubric and shows where every point went, with the evidence and the fix for each one it took."
     />
-    <meta name="theme-color" content="#E9EAE6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#14181A" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="GitRep: every point, accounted for" />
+    <meta
+      property="og:description"
+      content="Paste a repository or a username. Eleven checks, 100 points, and the fix for every point lost."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#0b0c0f" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Saira:wdth,wght@75..90,500..800&family=Red+Hat+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>GitRep: how does your repo read to a stranger?</title>
-    <script>
-      // Runs before paint so a dark-theme reader never sees a white flash.
-      (function () {
-        try {
-          var saved = localStorage.getItem("gitrep-theme");
-          var system = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-          document.documentElement.dataset.theme = saved || system;
-        } catch (e) {
-          document.documentElement.dataset.theme = "light";
-        }
-      })();
-    </script>
+    <title>GitRep: every point, accounted for</title>
   </head>
   <body>
     <div id="root"></div>

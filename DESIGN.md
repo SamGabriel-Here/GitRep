@@ -1,278 +1,353 @@
-# GitRep Design System
+---
+name: GitRep
+description: A repository's grade as a lap under live timing; every point lost is a lower third with its evidence and its fix.
+colors:
+  broadcast-black: "#0b0c0f"
+  panel-glass: "rgba(17, 18, 23, 0.92)"
+  panel-solid: "#111217"
+  hairline: "#262830"
+  hairline-strong: "#3a3d46"
+  ink: "#f2f2ee"
+  ink-2: "#a9acb4"
+  ink-3: "#868a94"
+  slab: "#f2f2ee"
+  slab-ink: "#0b0c0f"
+  full-marks-purple: "#7a3cf0"
+  points-lost-yellow: "#ffcf1a"
+  points-lost-ink: "#6b4600"
+  on-yellow-ink: "#161200"
+  unlit: "#30333b"
+  nothing-earned-edge: "#5a5e69"
+  team-default: "#868a94"
+typography:
+  display:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "clamp(110px, 14vw, 210px)"
+    fontWeight: 800
+    lineHeight: 0.8
+    letterSpacing: "-0.05em"
+    fontVariation: "'wdth' 85"
+    fontFeature: "'tnum'"
+  headline:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "clamp(54px, 6.8vw, 112px)"
+    fontWeight: 800
+    lineHeight: 0.9
+    letterSpacing: "-0.035em"
+    fontVariation: "'wdth' 85"
+  closer:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "clamp(40px, 4.6vw, 72px)"
+    fontWeight: 800
+    lineHeight: 0.95
+    letterSpacing: "-0.03em"
+    fontVariation: "'wdth' 85"
+  title:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "34px"
+    fontWeight: 800
+    lineHeight: 1.02
+    letterSpacing: "-0.025em"
+    fontVariation: "'wdth' 85"
+  strap:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "28px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.02em"
+    fontVariation: "'wdth' 85"
+  band:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 800
+    letterSpacing: "-0.01em"
+    fontVariation: "'wdth' 85"
+  row:
+    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
+    fontSize: "14px"
+    fontWeight: 600
+    letterSpacing: "0.03em"
+    fontVariation: "'wdth' 84"
+    fontFeature: "'tnum'"
+  body:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  label:
+    fontFamily: "Saira, Arial Narrow, system-ui, sans-serif"
+    fontSize: "12.5px"
+    fontWeight: 600
+    letterSpacing: "0.08em"
+    fontVariation: "'wdth' 84"
+  mono:
+    fontFamily: "Red Hat Mono, ui-monospace, SFMono-Regular, Menlo, monospace"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.6
+rounded:
+  none: "0px"
+spacing:
+  hairline-gap: "1px"
+  seam: "2px"
+  strap-gap: "6px"
+  inset: "18px"
+  edge: "28px"
+  tower-width: "372px"
+  tower-width-mid: "320px"
+components:
+  button-primary:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+    rounded: "{rounded.none}"
+    padding: "0 24px"
+  button-primary-hover:
+    backgroundColor: "#ffffff"
+    textColor: "{colors.slab-ink}"
+  button-copy:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+    rounded: "{rounded.none}"
+    padding: "6px 12px 5px"
+  input-gradestrap:
+    backgroundColor: "{colors.panel-glass}"
+    textColor: "{colors.ink}"
+    typography: "{typography.mono}"
+    rounded: "{rounded.none}"
+    padding: "16px"
+  input-gradestrap-label:
+    backgroundColor: "{colors.unlit}"
+    textColor: "{colors.ink}"
+    padding: "0 14px"
+  cue:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-3}"
+    padding: "8px 12px 7px"
+  cue-current:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+  tower-head:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+    padding: "11px 14px 9px"
+  tower-row:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    typography: "{typography.row}"
+    height: "36px"
+  tower-row-current:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+  lower-third:
+    backgroundColor: "{colors.panel-glass}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    width: "760px"
+  lower-third-fix:
+    backgroundColor: "{colors.points-lost-yellow}"
+    textColor: "{colors.on-yellow-ink}"
+    padding: "12px 18px"
+  lower-third-clean:
+    backgroundColor: "{colors.full-marks-purple}"
+    textColor: "#ffffff"
+    padding: "10px 18px"
+  band-slab:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+    typography: "{typography.band}"
+    padding: "7px 14px"
+  error-inline:
+    backgroundColor: "{colors.points-lost-yellow}"
+    textColor: "{colors.on-yellow-ink}"
+    padding: "8px 12px"
+---
 
-Extracted from the shipped implementation in `frontend/src/`. Tokens live in
-`styles/tokens.css`, everything else in `styles/app.css`. This records what exists, not
-what might be nice later. Section 0 (Research Log) is greenfield-only and does not apply:
-this system was built against an existing product with fixed content and an incumbent UI
-treated as anti-reference.
+# Design System: GitRep
 
-## 1. Atmosphere & identity
+## Overview
 
-GitRep feels like a marked-up assessment handed back to you. It is sober rather than
-cheerful, because the product's job is to tell you what is missing from your work and a
-design that congratulates you while doing it would be lying.
+**Creative North Star: "Live Timing"**
 
-The signature is the ledger line: a label on the left, a dotted leader running across the
-gap, a figure on the right. Everything on the page is built from that one device. The rubric
-panel, the graded report, and the running total are the same row at three different
-densities. Passing checks sit quiet in plain ink; only deductions take colour. The score is
-never presented as a badge or a ring, it arrives last, under a rule, as the total of an
-itemised account you have already read.
+A repository's grade is a lap under live timing, drawn as a broadcast graphics package over black. One persistent timing tower (the rubric's eleven checks as rows) is reused by every view: home shows it at rest and unlit, a repo report lights it sector by sector, a profile turns it into habits, a comparison turns it into a head-to-head. Around it sit the other pieces a broadcast reuses all weekend: a top strip ("the bug") with view cues and eleven mini-sectors, white name straps, sector boxes, a final-classification score, and a lower third for each deduction carrying the copyable fix.
 
-### Mark
+The package is dense, hard-edged and condensed, and it speaks in three voices. What the broadcast says (headlines, closers, the score, check names, repository names, verdicts, sentences) is Bricolage Grotesque in sentence case, heavy and slightly narrowed, tracked tight. What the graphics label (tower, cues, keys, tags, buttons) is uppercase Saira pulled narrow on its width axis. Everything is set in slabs and hairline-gridded panels with no radius and no shadow. Colour is not decoration; it is the timing state. Purple means a clean sector, yellow means points lost, an unlit grey segment means not run, and an outline means nothing earned. Monospace appears only where the README itself is quoted or a fix is handed over.
 
-`docs/logo.svg`, also the favicon, is that same ledger row compressed into a tile: two rows
-of label, dotted leader and figure, closed by the heavier rule that means "total". One
-figure is in the deduction accent, because a mark for this product should show a repo losing
-a point rather than passing everything.
+The build rejects the category default of score ring, card grid and traffic-light colours. There is no green anywhere; a gain colour was tried in the comparison and removed as a traffic-light regression.
 
-It is drawn on the ink tile in both themes rather than inverting, so one file serves the
-favicon, the README and anywhere else it is dropped. The tile carries a 1.5px
-`--paper` edge at 18% opacity: without it the mark disappears against a dark page, which it
-did on the first attempt. It holds together down to 32px and reads as a document at 16px.
+**Key Characteristics:**
+- One dark ground, dark only; no light theme.
+- White slabs mark exactly two things: what you can press, and what the graphic is naming.
+- Three sector states (purple, yellow, outline) plus unlit, never on a control.
+- Sentence-case Bricolage Grotesque for what is said; condensed uppercase Saira for what the graphics label; Red Hat Mono for README text, inputs and fixes.
+- Zero radius, zero shadow, 1px hairlines; clip-path wipes for entrances.
+- A pinned scroll stage on wide screens; the same pieces stacked on narrow ones.
 
-There is deliberately no mark in the app's own masthead. The Fraunces wordmark is enough
-there, the rubric panel already shows the ledger row at full size, and a 22px repetition of
-it beside the wordmark was decoration rather than information.
+## Colors
 
-## 2. Color
+A black broadcast ground with near-white slabs and a two-colour timing code, purple and yellow, that belongs to the data alone.
 
-Two grounds, one system. Light is the default because a graded document is read on paper.
-Values are declared once in `src/styles/tokens.css` under `:root[data-theme="..."]`.
+### Primary
+- **Full Marks Purple** (full-marks-purple): a sector that earned every point. Tower chips, sector segments, sector-box bars, the README barcode ticks, evidence tags, the clean-sector strip under a lower third, and the badge's pass squares. Text on it is pure white.
 
-| Role | Token | Light | Dark | Usage |
-|---|---|---|---|---|
-| Surface/primary | `--paper` | `#e9eae6` | `#14181a` | Page ground |
-| Surface/secondary | `--sheet` | `#f4f5f1` | `#1b2023` | Rubric panel, input field |
-| Text/primary | `--ink` | `#1c2119` | `#e6e8e3` | Headlines, labels, body |
-| Text/secondary | `--ink-soft` | `#4f564c` | `#9aa29b` | Details, figures, group names |
-| Text/tertiary | `--ink-faint` | `#646b61` | `#7d857f` | Placeholder, owner prefix, footer |
-| Border/default | `--rule` | `#c4c8bf` | `#313839` | Section rules, leaders, panel edge |
-| Border/subtle | `--rule-faint` | `#d6d9d1` | `#252b2d` | Row separators, masthead rule |
-| Accent/deduction | `--deduct` | `#8c2f23` | `#e2705a` | Points lost, fix blocks, errors |
-| Accent/wash | `--deduct-wash` | `rgba(140,47,35,.07)` | `rgba(226,112,90,.11)` | Fix-block and error ground |
-| Focus | `--focus` | `#1c2119` | `#e6e8e3` | Focus ring |
+### Secondary
+- **Points-Lost Yellow** (points-lost-yellow): a sector that lost points. Tower chips and values, sector segments, the fix strip under a lower third, the points chip, the partial evidence tag, fact flags and the inline form error. Text set on it uses the near-black On-Yellow Ink (on-yellow-ink). Where a loss value sits on a white slab (the current tower row) it switches to Points-Lost Ink (points-lost-ink) for contrast.
+- The README badge, drawn server-side on a white ground, uses a deeper amber (#d99a00) for its partial squares because the screen yellow disappears on white. It is a badge-only adaptation, not a screen token.
 
-### Rules
+### Neutral
+- **Broadcast Black** (broadcast-black): the page ground, theme colour and scrollbar track.
+- **Panel Glass** (panel-glass) and **Panel Solid** (panel-solid): the tower, straps, lower thirds and snippet panels float on the translucent panel; cells inside hairline grids (facts, sector boxes, starters) use the solid one.
+- **Hairline** (hairline) and **Hairline Strong** (hairline-strong): 1px panel borders, row dividers and the 1px gaps of hairline grids; the strong one outlines the input strap and underlines example links.
+- **Ink** (ink), **Ink 2** (ink-2), **Ink 3** (ink-3): primary text, supporting prose, and metadata/positions/placeholders. Ink 3 clears 4.5:1 on the panel and is the floor for any readable text.
+- **Slab** (slab) and **Slab Ink** (slab-ink): the white strap and its black text. Hover on a slab button lifts it to pure white.
+- **Unlit** (unlit): a segment or chip not yet run; also the fill behind the input strap's label.
+- **Nothing-Earned Edge** (nothing-earned-edge): the 1px inset outline for a zero sector.
+- **Team** (team-default): a repository's GitHub language colour, set inline on the name strap's side bar and on profile chips; the grey is the fallback for unknown languages.
 
-- There is exactly one accent, and it means "points were taken off". It is never decorative
-  and never used for emphasis, branding, or a call to action.
-- There is no success green and no warning amber. A passing check is not an achievement to
-  celebrate, it is the absence of a problem, so it renders in `--ink-soft` like any other
-  data. Traffic-light scoring was rejected deliberately.
-- No raw hex outside `styles/tokens.css`. Verified: `app.css` contains none.
-- The grounds carry depth on their own (Section 7). No gradient is used anywhere.
+### Named Rules
+**The State-Not-Style Rule.** Purple, yellow, outline and unlit are the lap's four states and nothing else. They never colour a button, link, heading or border. If a colour is not reporting a sector's result, it is ink or slab.
 
-## 3. Typography
+**The No-Green Rule.** There is no green, and no red. Comparison leads are shown by pattern (solid versus dashed white), not by a win colour.
 
-Two families, sharply divided by job. Loaded from Google Fonts in `frontend/index.html`.
+**The Zero-Is-Hollow Rule.** A sector that earned nothing is an outline (1px inset of nothing-earned-edge), never a fill. Only "not run yet" is a solid grey.
 
-- **Display:** `Fraunces` variable serif, axes `opsz`, `wght`, `SOFT`, `WONK`. Wordmark,
-  headline, section heads, and the verdict word.
-- **Everything else:** `JetBrains Mono`. Labels, figures, details, input, and body.
+## Typography
 
-Mono for body is a deliberate choice, not a default. The content is short labels, one-line
-fixes, and columns of numbers that must align, so tabular figures are load-bearing. Nothing
-on this page is long-form prose.
+**Display Font:** Bricolage Grotesque (variable: optical size 12-96 automatic, width 75-100, weight 400-800), with system-ui
+**Body Font:** Bricolage Grotesque at normal width, 16px/1.5 base
+**Label Font:** Saira (variable: width 75-90, weight 500-800), with Arial Narrow, system-ui
+**Mono Font:** Red Hat Mono (400, 500), with ui-monospace, SFMono-Regular, Menlo
 
-### Scale
+**Character:** Three voices with separate jobs. Bricolage carries everything that is said, in sentence case: at 800 weight and 85% width with negative tracking it makes a dense, quirky display voice, and its optical sizing lets the same family read as plain text at 16-17px. Saira is the broadcast's label-and-figure voice, always condensed capitals on its width axis. The mono is the README's own voice: whatever the visitor typed or will paste back.
 
-| Level | Token | Min → Max | Weight | Usage |
-|---|---|---|---|---|
-| Display | `--step-3` | 30.4px → 73.6px | 600 | Headline |
-| Total | inline `clamp` | 56px → 104px | 700 | The score figure only |
-| H2 | `--step-2` | 20.8px → 28px | 600 | Repo name, verdict word |
-| H3 | `--step-1` | 15.2px → 17px | 600 | Panel and ledger heads |
-| Body | `--step-0` | 14.1px → 15.2px | 400 | Ledger rows, input, labels |
-| Caption | `--step--1` | 12.5px → 13.3px | 400 | Details, fixes, facts, footer |
+### Hierarchy
+- **Display** (Bricolage 800, clamp(110px, 14vw, 210px), 0.8, width 85%, -0.05em, tabular): the final-classification score only. It deliberately exceeds 6rem; it is the graphic, not a heading. Its unit ("pts", "avg", or the leader in a comparison) is Saira capitals at 0.2em in Ink 2, held off the numeral (0.05em after the figure, 0.3em before the unit) so a wide digit never touches it. 100-170px under 1240px, 96-170px stacked.
+- **Headline** (Bricolage 800, clamp(54px, 6.8vw, 112px), 0.9, width 85%, -0.035em, max 11ch, balanced, sentence case): the home headline. A small variant (clamp(32px, 3.8vw, 58px), 0.92, max 24ch) carries loading and error states. clamp(46px, 13vw, 88px) stacked.
+- **Closer** (Bricolage 800, clamp(40px, 4.6vw, 72px), 0.95, width 85%, -0.03em, max 16ch): the badge and next-step closers. clamp(34px, 10vw, 56px) stacked.
+- **Title** (Bricolage 800, 34px, 1.02, width 85%, -0.025em): a lower third's check name in sentence case; 28px on short or narrow screens.
+- **Strap** (Bricolage 800, 28px, 1, width 85%, -0.02em): the repository name on the name strap, in its real casing; 24px under 1240px, 26px stacked.
+- **Band** (Bricolage 800, 24px, width 85%, -0.01em): the verdict band under the score; its first letter is capitalised, the rest stays as written.
+- **Body** (Bricolage 400, 17px, 1.5): standfirsts, ledes and verdicts, capped at 42-60ch. Lower-third detail and the fix instruction run at 16px, criteria and notes at 15px.
+- **Row** (Saira 600, 14px, 0.03em, width 84%, tabular, uppercase): tower rows; 13px on long towers.
+- **Label** (Saira 600-800, 11-13px, 0.03-0.1em, width 75-88%, uppercase): tower head, cues, wordmark, meta lines, fact keys and values, sector-box labels and figures, tags, starter heads and links, button text, fix and clean labels, hints, figcaptions and the barcode needle.
+- **Mono** (400, 13-16px, 1.6): input text (16px), example repos, starter code, the badge snippet, evidence lines (14px, 1.75) and the footage.
 
-### Rules
+### Named Rules
+**The Said-Versus-Labelled Rule.** Anything the broadcast says, a sentence or a name, is Bricolage in sentence case with its real casing. Anything the graphics label is Saira capitals. A display line is never uppercased, and a sentence is never set in Saira.
 
-- Two families, no third.
-- Body never below 14px and captions never below 12px at 375px. Mono reads smaller than a
-  sans at the same nominal size, so the floors are enforced at the bottom of each `clamp()`.
-- Headings use `text-wrap: balance`.
-- The score figure is the only place a size is set outside the scale, because it is a single
-  typographic monument rather than a reusable level.
+**The Capitals-In-The-Tower Rule.** The tower head and tower rows stay in capitals, repository names included, as broadcast timing towers do. Everywhere else (straps, titles, sentences) a repository name keeps its real casing.
 
-## 4. Spacing & layout
+**The Narrow-By-Axis Rule.** Condensation comes from the width axis, never from a fourth family: Saira labels run at font-stretch 75-88% with open tracking (0.03-0.1em); Bricolage display runs at 85% with tight negative tracking (-0.01 to -0.05em). Saira is never tracked negative; Bricolage is never tracked open.
 
-Spacing intent is expressed in `rem` steps at call sites; fluid values stay raw as browser
-mechanics, per the tokenize-intent rule.
+**The Tabular Figures Rule.** Every number that can change or be compared (score, tower values, pairs, sector boxes, facts, points chips) uses tabular figures so columns hold still during a replay.
 
-| Token | Value | Usage |
-|---|---|---|
-| `--gutter` | `clamp(1.15rem, 4vw, 3.5rem)` | Page side padding |
-| `--measure` | `38rem` | Max line length for prose |
-| `--shell` | `clamp(68rem, 46rem + 34vw, 96rem)` | Content column |
+**The README-Voice Rule.** Mono is reserved for README content, typed input and copyable fixes. UI chrome never goes mono.
 
-The shell is fluid rather than fixed. A 68rem column centred in a 1920px window
-left 416px of dead margin on each side, about 43% of the screen doing nothing, and the
-page read as small rather than spacious. It now widens with the viewport: 7% margins at
-1440px, 14% at 1920px, and it stops growing at 96rem so the ledger never sprawls. The
-headline's ceiling rose alongside it, because filling that space wants presence, not just a
-longer line.
+## Layout
 
-### Grid
+Wide screens (1000px and up) run a **pinned stage**: a sticky 100vh viewport the page scrolls through. The stage writes scroll progress to each layer as in/out/t values, and layers fade and wipe from that. Geometry is fixed to the edges: a 28px edge margin; the tower pinned top-left at 84px from the top, 372px wide (320px under 1240px); content starts at twice the edge plus the tower width; straps and sector boxes anchor top-right; the lower third anchors 108px from the bottom, up to 760px wide; the README barcode runs along the bottom edge.
 
-- Opening: two columns, `minmax(0, 1.08fr) minmax(0, 0.92fr)`, gap `clamp(2.25rem, 6vw, 5.5rem)`,
-  vertically centred. The pitch is wider than the rubric on purpose, so the headline sets the
-  reading order. Centring matters: the rubric panel is roughly 200px taller than the pitch,
-  and aligning to the start dumped all of that difference into one void under the input.
-- Report and ledger: single column. The ledger row is a flex cluster whose leader absorbs all
-  slack, which is what keeps figures flush right at every width.
-- Breakpoints: **860px** (opening collapses to one column) and **520px** (input stacks above
-  its button). These are content breakpoints, chosen where the layout actually fails, not a
-  device ladder.
+The first viewport puts the tower at rest (unlit rubric) on the left, the huge headline bottom-anchored on the right with the input strap under it as the only white action, and the sector strip at the top right.
 
-### Rules
+Below 1000px the same components restack into a single **flow** column (max 760px, 16px gutters, 18px gap) with a sticky bug; tower and straps become in-flow, sector boxes go 2-up, type scales down. Between 1000px and 1240px the result block (score and band) drops to calc(50% + 70px) from the top so it clears the sector boxes. A max-height of 800px tightens rows to 32px and trims the lower third.
 
-- Everything is left-aligned. Centred text was rejected: documents are read from a left edge,
-  and the incumbent design's centred header was one of its generic tells.
-- Vertical rhythm between ledger categories is deliberately larger than within them, so the
-  four categories read as separate accounts rather than one long list.
+Spacing is tight and structural: 1px hairline gaps inside grids, 2px seams between segments and cues, 6px between stacked straps and at sector breaks, 14-18px panel insets.
 
-## 5. Components
+**Footage.** The README text scrolls behind the graphics at 7% ink in mono, masked to the band between the straps and the lower third and faded at the right, so it never runs under a figure or sentence being read. It is absent in the result phase.
 
-### LedgerRow (`components/LedgerRow.jsx`)
+### Named Rules
+**The One-Tower Rule.** Every view reuses the same tower. New views change its rows, title and figure, never its position or form.
 
-The primitive the whole system is built from. Used by both the rubric panel and the report.
+**The Clear-Band Rule.** Background footage stays inside its masked band. Nothing decorative crosses a figure, a strap or a lower third.
 
-- **Structure:** `.row > .row-label + .leader + .row-points`
-- **Props:** `label`, `points`, `tone`, `index`
-- **Variants:** `is-pass` (figure in `--ink-soft`), `is-loss` (figure in `--deduct`, bold)
-- **Spacing:** leader margin `0 0.5rem`, min width `1.25rem`
-- **States:** static; it is data, not a control. No hover or focus.
-- **Accessibility:** the leader is `aria-hidden`; label and figure read as plain text in order.
-- **Motion:** `draw` on the leader, `land` on the figure, staggered by `--i` (Section 6).
-- **Layout:** cluster. Owns no scroll.
+## Elevation & Depth
 
-### Rubric (`components/Rubric.jsx`)
+Flat. There are no drop shadows. Depth comes from layering order (footage at 7% ink, then glass panels at 92% opacity over black, then slabs), from 1px hairline borders, and from motion. The only box-shadows in the build are functional: the 1px inset outline for a nothing-earned sector, and the 2px ink focus ring on the input strap.
 
-- **Structure:** `aside.rubric > .rubric-head + .rubric-group*` , each group a label plus Rows
-- **Spacing:** panel padding `clamp(1.25rem, 3vw, 1.9rem)`
-- **States:** renders only when `GET /rubric/` resolves; absent on failure rather than broken.
-- **Accessibility:** `aside` landmark, `h2` head.
-- **Layout:** stack inside the opening grid's second column.
+### Named Rules
+**The No-Lift Rule.** Panels never cast shadows or float on hover. Hover changes fill (slab to white, row to 6% ink wash), not height.
 
-### Report (`components/Report.jsx`)
+## Shapes
 
-- **Structure:** `main.report > .identity + dl.facts + section.ledger > .category* + .total`
-- **States:** `pass` / `partial` / `fail` per entry; `partial` and `fail` render `.entry-fix`.
-  Fork and archived repos render `.flag` chips.
-- **Accessibility:** `aria-live="polite"` so a screen reader announces a finished grade;
-  facts are a real `dl`; the total is text, not an image.
-- **Motion:** one orchestrated reveal, keyed on repo name so it replays per grade.
-- **Layout:** stack. Owns no scroll; the page scrolls.
+Every panel, strap, chip, segment, button and input is a hard rectangle with a 0 radius. Forms are built from slabs, hairline-bordered panels and thin bars: 6x20px tower chips, 16x8px sector segments, 4px sector-box bars, 8px strap side bars. Entrances are horizontal clip-path wipes, left to right. Pattern carries identity where colour must not: the second repository in a comparison is always a dashed stripe (6px on, 3px off on the strap; 4px on, 3px off on chips).
 
-### ProfileReport (`components/ProfileReport.jsx`)
+**The Hard-Edge Rule.** No radius anywhere in the interface: a panel is a slab, and it arrives by wiping, not by scaling or fading in from a rounded card.
 
-The same ledger at a different altitude. A profile is not twenty scorecards, it is one
-picture of a habit, so the page leads with each check totalled across every repository and
-only then lists the repositories themselves.
+## Components
 
-- **Structure:** `main.report > .identity + dl.facts + section.ledger (habits) + section.ledger (repos)`
-- **Rows:** `LedgerRow` unchanged in both sections. A habit's figure is the points that check
-  costs across the whole profile; a repository's figure is its score.
-- **States:** a profile with no non-fork repositories renders a `.note` instead of two empty
-  ledgers.
-- **Accessibility:** repository rows are real `button` elements, so they are reachable and
-  operable from the keyboard and take the same focus ring as everything else.
-- **Motion:** the same single reveal, staggered across the habits.
-- **Layout:** stack. Owns no scroll.
+### Buttons
+- **Shape:** hard rectangle (0 radius), no border.
+- **Primary (the Grade button):** white slab with a black Saira capitals label, 800 weight, 0.1em tracking, 24px side padding, joined to the right end of the input strap. Always enabled; an empty submit shows the inline error instead of disabling the button.
+- **Hover / Focus:** slab lifts to pure white in 0.15s; focus is a 2px ink outline at 3px offset site-wide.
+- **Copy:** smaller slab (12px label, 6px 12px padding) that sits in starter heads and at the end of the badge snippet.
+- **Inline / examples:** text buttons in Ink 2 with a hairline-strong underline that turns to current colour on hover; example repos are set in mono.
 
-### Repo row (`.repo-row` in `styles/app.css`)
+### Cues (view navigation)
+- **Style:** uppercase 12.5px labels in Ink 3, 2px apart, in the top strip after the wordmark.
+- **State:** hover to Ink; the current cue becomes a white slab with black text. The strip scrolls horizontally without a scrollbar when it overflows.
 
-- **Structure:** `button.repo-row > LedgerRow + .repo-row-meta`
-- **States:** default, hover (a `--rule-faint` wash), focus-visible
-- **Why a wash rather than the deduction colour:** the row is a target, not a warning. The
-  accent means points lost and nothing else, so a hover cannot borrow it.
-- **Why the score is never coloured:** an early version tinted any score under 85 with the
-  deduction accent. That is traffic-light scoring wearing one light, which Section 2 rules
-  out, and it painted an 82 as a failure. The figure shown is points *earned*, so it takes
-  the quiet tone; the list is ordered best first, which is what conveys standing.
+### Input strap (GradeStrap)
+- **Style:** a single row: an unlit-grey label cell, a mono 16px input on panel glass, and the white Grade slab; 1px hairline-strong border, max 640px.
+- **Focus:** the border shifts to Ink 2 and a 2px ink ring surrounds the whole strap; the input itself has no outline.
+- **Error:** an inline yellow strip with on-yellow ink (role alert, input aria-invalid). On the pinned stage it hangs absolutely under the strap so the bottom-anchored block does not jump; in flow it sits in the document.
+- **Narrow:** below 1000px the label is visually hidden but still labels the input.
 
-### Field (`.field` in `styles/app.css`)
+### Timing Tower (signature)
+- A panel-glass column with a white slab head (title left, figure right, tabular). Rows are 36px grids of position, chip or micro-sector strip, label, optional pair, and value, divided by hairlines. Section heads are 26px, Ink 3, 12px with 0.1em tracking. Everything in the tower is Saira capitals, including the repository name in the head.
+- **Current row:** inverts to a white slab; loss values switch to points-lost ink.
+- **Dimmed row:** text stays at Ink 3 (readable); only chips and micro marks fade to 0.3 opacity.
+- **Compare:** a chip is solid white where the first repository leads, dashed where the second leads, unlit when level; values show ahead in 800 weight and behind in Ink 2.
+- **Motion:** rows wipe in on remount (0.42s, 26ms stagger). When a report lands the lap replays: chips light from unlit, 60ms apart after 200ms, while the score counts up over 1100ms with an ease-out quart.
 
-- **Structure:** bordered unit containing `input` + submit `button`, sharing one 3px radius
-- **States:** default, `:focus-within` (border to `--ink` plus a 3px `--deduct-wash` ring),
-  `:disabled` (55% opacity, `cursor: progress`, spinner replaces the label), error (`.error`
-  block below, `role="alert"`)
-- **Accessibility:** visually hidden `<label>`; `autoCapitalize`/`autoCorrect`/`spellCheck` off
-- **Layout:** row above 520px, stack below.
+### Top strip (the Bug)
+The mark and GitRep wordmark (Saira 17px, 800, uppercase, width 88%), the view cues, and eleven 16x8px sector segments pushed right, with 6px breaks between the rubric's four categories. Segments take the sector states, stretch vertically on hover, and the current one gets a 1px ink outline. While grading, a single purple light sweeps the eleven segments (1.3s loop, 90ms stagger).
 
-## 6. Motion & interaction
+### Name Strap and Sector Boxes
+The name strap is a panel with an 8px team-colour side bar (dashed for the rival), the name in the Bricolage strap voice with its real casing, and a Saira capitals meta cell after a hairline. Facts sit below as a hairline grid of solid cells in Saira capitals; flags read in yellow. Sector boxes are a 4-up hairline grid (2-up stacked) of a Saira label, a tabular Saira figure over its maximum, and a 4px bar that grows from the left (purple, or yellow when points were lost).
 
-One orchestrated moment per grade. Nothing else on the page animates on its own.
+### Lower Third (signature)
+The deduction graphic: a panel-glass box, up to 760px, that wipes in from the left (0.5s, 14px travel) on every beat. Head holds the check name in the Bricolage title voice, sentence case, and a Saira points chip (yellow for a loss, purple for full marks, slab for neutral). Bricolage detail and a small Saira capitals meta line follow. A loss ends in the yellow fix strip (a Saira "Fix" label plus the instruction in Bricolage 600); a clean sector ends in the purple clean strip. A starter block below holds a copyable mono template on panel solid, max 150px tall (110px on short screens).
 
-| Type | Duration | Easing | Usage |
-|---|---|---|---|
-| Micro | 150ms | default | Colour and border transitions on hover and focus |
-| Emphasis | 550ms | `cubic-bezier(0.2, 0.75, 0.2, 1)` | `draw`, the leader scaling from the left |
-| Emphasis | 450ms | `ease-out` | `land`, figures and detail lines settling |
-| Loop | 700ms | `linear` | `spin`, the submit spinner |
+### Classification
+The score in the display voice with its Saira unit, then the verdict band: a white slab (7px 14px) in the Bricolage band voice, first letter capitalised, then verdict prose in Ink 2 at 17px, capped at 42ch.
 
-Stagger is `calc(var(--i) * 40ms)` for leaders and `+ 180ms` for figures, with the total at
-640ms. `--i` counts continuously across all four categories, so the reveal reads as one pass
-down the page rather than four separate ones.
+### README Barcode (TrackMap)
+The README drawn as a barcode: one thin vertical mark per line along the bottom of the stage, 40px tall, its height and ink weight set by line kind (headings brightest, then images, then code). Evidence ticks sit on top in the sector colours, and a 2px ink needle labelled with the current line slides to the evidence being read (0.6s ease-out). It stays a barcode, one mark per line; it is not a circuit map.
 
-### Rules
+### Evidence
+README hunks in mono at 14px/1.75: right-aligned line numbers in Ink 3, lines in Ink 3, hit lines lifted to Ink on a 6% ink wash with purple or yellow check tags at the end. Gaps between hunks are small Saira capitals in Ink 3. The window masks its top and bottom edges and scrolls with the stage.
 
-- `draw`, `land`, and `spin` animate `transform` and `opacity` only. Transitions touch
-  `color`, `border-color`, `box-shadow`, and `opacity`, which are paint-only. No layout
-  property is ever animated.
-- No entrance animation on scroll, no hover lift on panels, no transition on non-interactive
-  elements. Section-by-section fade-ups were rejected as the generic default.
-- `prefers-reduced-motion: reduce` collapses every animation and transition to 0.001ms.
+### Status tags
+Loading and error states reuse the small sentence-case headline with a Saira capitals slab tag beneath it, sized to its text: white for "On track", yellow for "Race control".
 
-## 7. Depth & surface
+## Do's and Don'ts
 
-**Strategy: tonal shift plus hairline borders. No elevation shadows anywhere.**
+### Do:
+- **Do** reuse the tower, bug, straps and lower third for any new view; change rows and copy, not the package.
+- **Do** keep purple, yellow, outline and unlit strictly for sector results, and set text on yellow in on-yellow ink (#161200) and on purple in white.
+- **Do** reserve the white slab for the one thing you can press or the thing the graphic is naming.
+- **Do** enter panels with a left-to-right clip-path wipe on the wipe curve (cubic-bezier(0.2, 0.8, 0.2, 1)) and settle values on the ease-out curve (cubic-bezier(0.16, 1, 0.3, 1)); collapse all of it, and remove wipes, under prefers-reduced-motion.
+- **Do** keep readable text at Ink 3 or brighter; fade only colour marks when de-emphasising.
+- **Do** distinguish a second repository by a dashed stripe, never by a colour.
+- **Do** use tabular figures for every score and value.
+- **Do** set headlines, closers, names, check titles and sentences in Bricolage sentence case (800, width 85%, negative tracking), and every label, cue, key, tag and button in Saira capitals with the family set explicitly.
+- **Do** keep the tower in capitals, repository names included, and keep real casing for names everywhere else.
 
-| Type | Value | Usage |
-|---|---|---|
-| Panel | `1px solid var(--rule)` on `--sheet` | Rubric panel, input field |
-| Section rule | `1px solid var(--rule)` | Category heads, report top |
-| Separator | `1px solid var(--rule-faint)` | Row dividers, masthead, footer |
-| Total rule | `2px solid var(--ink)` | The single heaviest line on the page |
-| Leader | `1px dotted var(--rule)` | The ledger connector |
-| Fix marker | `2px solid var(--deduct)` left border on `--deduct-wash` | Actionable fixes |
+### Don't:
+- **Don't** add green, red or any win/lose colour; the comparison regressed to traffic lights once and was reverted.
+- **Don't** use a score ring, a card grid or a gauge; the grade is a tower and a classification figure.
+- **Don't** round a corner or add a drop shadow to any panel, strap, chip or control.
+- **Don't** use purple or yellow on a button, link or heading.
+- **Don't** set UI chrome in mono or README content in Bricolage or Saira.
+- **Don't** uppercase a Bricolage line, set a sentence or headline in Saira capitals, or add a fourth family.
+- **Don't** let footage or any background texture run under a figure, a strap or a lower third.
+- **Don't** add a light theme to the package without a new world decision; it is broadcast black only.
 
-The only `box-shadow` in the system is the focus ring on `.field`. Radius is 3px on inputs and
-panels, 2px on chips and the theme toggle, and 0 everywhere else. Weight, not elevation,
-carries hierarchy: the total rule is 2px against every other rule's 1px, which is what makes
-the score read as final.
+## Known Debt
 
-## 8. Accessibility constraints & accepted debt
+Recorded so it is not mistaken for system rules.
 
-### Constraints
-
-WCAG 2.2 AA. Measured in-browser against each theme's own ground:
-
-| Token | Light | Dark |
-|---|---|---|
-| `--ink` | 13.57:1 | 14.48:1 |
-| `--ink-soft` | 6.28:1 | 6.82:1 |
-| `--ink-faint` | 4.55:1 | 4.71:1 |
-| `--deduct` | 6.83:1 | 5.70:1 |
-
-Every token that carries data clears 4.5:1. An earlier `--ink-faint` measured 2.62:1 while
-carrying pass figures and fact labels, and was darkened rather than demoted.
-
-Also enforced: 2px `--focus` outline with 3px offset on every focusable element, full keyboard
-reachability, `aria-live="polite"` on the report, `role="alert"` on errors, a visually hidden
-label on the input, `aria-hidden` on decorative leaders and spinners, `aria-label` on the
-theme toggle stating the destination theme, and `prefers-reduced-motion` honoured.
-
-Theme is stamped on `<html>` by an inline script in `index.html` before first paint, so a dark
-reader never sees a light flash. It falls back to `prefers-color-scheme` when storage is empty
-and to light when storage throws.
-
-### Accepted debt
-
-| Item | Location | Why accepted | Exit |
-|---|---|---|---|
-| Mono set for all body copy | `styles/tokens.css` | Content is labels, figures, and one-line fixes; tabular alignment matters more than prose comfort. Reviewed at 375px. | Revisit if a long-form surface is ever added |
-| Screenshots are captured by hand | `docs/` | A one-off puppeteer-core script drove them; it is not committed | Commit the script if the shots need regular refreshing |
-| No visual regression tests | repo | Verified by hand at 375px and desktop in both themes this session | Add Playwright snapshots if the surface grows |
-| `.is-revealing` is never removed after play | `components/Report.jsx` | Replay is driven by the React `key`, so the class is inert once animation ends | Only matters if reports start updating in place |
+- The 6px category breaks in the eleven sector segments are hard-coded to the rubric's 5/3/2/1 split by child position; a rubric change needs the stylesheet changed too.
+- The criteria text in the front-end rubric duplicates the README's rubric table and can drift from it.
+- Starters are templates, not generated from the repository.
+- No light theme, and no visual regression tests.
+- The mark (`docs/logo.svg`, drawn inline in the top strip) predates this system: a rounded square (14 radius) in green-black #1C2119 with a coral #E2705A dash. It is kept on purpose, because the logo is a brand commitment in PRODUCT.md, and it is the only place those colours and that radius appear. Do not reuse them elsewhere; a redraw of the mark in this system's palette is the user's call.
