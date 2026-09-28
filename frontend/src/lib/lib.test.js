@@ -37,3 +37,15 @@ test("a starter only exists for a deduction, and CI opens GitHub's editor prefil
   assert.ok(ci.lines.includes("      - run: pytest"));
   assert.ok(ci.href.startsWith("https://github.com/o/r/new/main?filename=.github/workflows/ci.yml&value="));
 });
+
+test("evidence past the README's 1,500-line cap is skipped, not shown blank", () => {
+  const text = "a\nb\nc";
+  const hunks = evidenceHunks(text, [{ id: "install", evidence: [{ line: 2 }, { line: 1800 }] }]);
+  assert.deepEqual(hunks.map((h) => [h.from, h.to]), [[1, 3]]);
+});
+
+test("the license starter opens GitHub's new-file page, which offers the templates", () => {
+  const report = { repo: { name: "o/r", url: "https://github.com/o/r", language: "Go", default_branch: "trunk" } };
+  const start = starter({ id: "license", lost: 8 }, report);
+  assert.equal(start.href, "https://github.com/o/r/new/trunk?filename=LICENSE");
+});

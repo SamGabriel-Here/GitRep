@@ -1,0 +1,573 @@
+/* The graphics that change beat by beat: the result, the lower third and
+   its starter, the README footage, the evidence and the track map. */
+
+/* ---------- the result: the final classification graphic ---------- */
+
+.result {
+  top: calc(50% + 10px);
+  left: var(--content-left);
+  right: var(--edge);
+  transform: translateY(-40%);
+}
+
+.classification {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px 36px;
+}
+
+.big {
+  display: flex;
+  align-items: baseline;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 85%;
+  font-size: clamp(110px, 14vw, 210px);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The figure's tight tracking also trails its last digit; give it back
+   so the unit never touches a wide numeral like 2. */
+.big span {
+  margin-right: 0.05em;
+}
+
+.big small {
+  font-family: var(--cond);
+  margin-left: 0.3em;
+  color: var(--ink-2);
+  font-stretch: 80%;
+  font-size: 0.2em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.verdict {
+  max-width: 42ch;
+  padding-bottom: 14px;
+}
+
+.band::first-letter {
+  text-transform: uppercase;
+}
+
+.band {
+  display: inline-block;
+  padding: 7px 14px 7px;
+  background: var(--slab);
+  color: var(--slab-ink);
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 85%;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+
+.verdict p {
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-size: 17px;
+}
+
+.hint {
+  font-family: var(--cond);
+  margin-top: 30px;
+  color: var(--ink-3);
+  font-weight: 600;
+  font-stretch: 84%;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- the lower third ---------- */
+
+.third-slot {
+  left: var(--content-left);
+  bottom: 108px;
+  width: min(760px, calc(100vw - var(--content-left) - var(--edge)));
+}
+
+.third-slot.is-high {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-45%);
+}
+
+.third-swap {
+  animation: third-in 0.5s var(--wipe) both;
+}
+
+@keyframes third-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+    transform: translateX(-14px);
+  }
+}
+
+.third {
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.third-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px 4px;
+}
+
+.third-head h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 85%;
+  font-size: 34px;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.third-pts {
+  font-family: var(--cond);
+  flex: none;
+  padding: 6px 10px 5px;
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+}
+
+.third-pts.is-loss {
+  background: var(--part);
+  color: #161200;
+}
+
+.third-pts.is-full {
+  background: var(--full);
+  color: #fff;
+}
+
+.third-pts.is-neutral {
+  background: var(--slab);
+  color: var(--slab-ink);
+}
+
+.third-detail {
+  padding: 2px 18px 0;
+  color: var(--ink-2);
+  font-size: 16px;
+}
+
+.third-detail p + p {
+  margin-top: 6px;
+}
+
+.third-meta {
+  font-family: var(--cond);
+  padding: 6px 18px 14px;
+  color: var(--ink-3);
+  font-weight: 600;
+  font-stretch: 84%;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.third-fix {
+  display: flex;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--part);
+  color: #161200;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.third-fix b {
+  font-family: var(--cond);
+  flex: none;
+  font-weight: 800;
+  font-stretch: 78%;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.third-clean {
+  font-family: var(--cond);
+  padding: 10px 18px;
+  background: var(--full);
+  color: #fff;
+  font-weight: 700;
+  font-stretch: 80%;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.where {
+  color: var(--ink);
+}
+
+.duel {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.duel div {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) 1fr;
+  gap: 12px;
+}
+
+.duel dt {
+  font-family: var(--cond);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink);
+  font-weight: 700;
+  font-stretch: 84%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.duel dd {
+  margin: 0;
+}
+
+.criteria {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 0;
+  padding: 0 18px 16px;
+  list-style: none;
+}
+
+.criteria li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 16px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.criteria b {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-stretch: 84%;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.criteria span {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.criteria p {
+  grid-column: 1 / -1;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+
+/* ---------- starters: the copyable fix ---------- */
+
+.starter {
+  border-top: 1px solid var(--line);
+  background: var(--panel-solid);
+}
+
+.starter-head {
+  font-family: var(--cond);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 18px;
+  color: var(--ink-3);
+  font-weight: 600;
+  font-stretch: 84%;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.starter-head code {
+  color: var(--ink-2);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.starter pre {
+  margin: 0;
+  max-height: 150px;
+  overflow: auto;
+  padding: 2px 18px 12px;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.starter-note {
+  padding: 0 18px 10px;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+
+.starter-link {
+  font-family: var(--cond);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 18px 14px;
+  color: var(--ink);
+  font-weight: 700;
+  font-stretch: 84%;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.copy {
+  font-family: var(--cond);
+  flex: none;
+  border: 0;
+  background: var(--slab);
+  color: var(--slab-ink);
+  padding: 6px 12px 5px;
+  cursor: pointer;
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background-color 0.15s;
+}
+
+.copy:hover {
+  background: #fff;
+}
+
+/* ---------- footage: the README behind the graphics ---------- */
+
+/* The footage lives in the band between the straps and the lower third,
+   so it never runs under a figure or a sentence someone is reading. */
+.layer.footage {
+  z-index: 1;
+  inset: 0 var(--edge) 0 var(--content-left);
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(transparent 14%, #000 24%, #000 42%, transparent 54%),
+    linear-gradient(90deg, #000 60%, transparent 92%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+.footage-track {
+  font-family: var(--mono);
+  font-size: clamp(14px, 1.2vw, 19px);
+  line-height: 1.9;
+  color: rgba(242, 242, 238, 0.07);
+  transform: translateY(calc(33vh - var(--line, 0) * 1.9em));
+  transition: transform 0.9s var(--ease-out);
+}
+
+.fl {
+  display: block;
+  overflow: hidden;
+  white-space: pre;
+}
+
+.fl::before {
+  content: attr(data-n);
+  display: inline-block;
+  width: 3.4em;
+  color: rgba(242, 242, 238, 0.05);
+}
+
+/* ---------- the README evidence ---------- */
+
+.readme-layer {
+  top: 190px;
+  bottom: 92px;
+  left: var(--content-left);
+  right: var(--edge);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.readme-layer header p {
+  margin-top: -8px;
+  max-width: 60ch;
+  color: var(--ink-2);
+}
+
+.evidence-window {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, #000 5%, #000 90%, transparent);
+}
+
+.evidence-track {
+  transform: translateY(calc(var(--t, 0) * -1 * var(--travel, 0px)));
+}
+
+.evidence {
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.ln {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 0 8px;
+}
+
+.ln .n {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  text-align: right;
+}
+
+.ln code {
+  color: var(--ink-3);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ln.is-hit {
+  background: rgba(242, 242, 238, 0.06);
+}
+
+.ln.is-hit code {
+  color: var(--ink);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.tags b {
+  font-family: var(--cond);
+  padding: 3px 7px 2px;
+  background: var(--full);
+  color: #fff;
+  white-space: nowrap;
+  font-weight: 700;
+  font-stretch: 75%;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tags b[data-tone="partial"] {
+  background: var(--part);
+  color: #161200;
+}
+
+.hunk-gap {
+  font-family: var(--cond);
+  margin: 10px 0;
+  padding: 0 8px;
+  color: var(--ink-3);
+  font-weight: 600;
+  font-stretch: 84%;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.evidence-none {
+  color: var(--ink-2);
+}
+
+/* ---------- the track map ---------- */
+
+.trackbar {
+  position: absolute;
+  z-index: 4;
+  left: var(--content-left);
+  right: var(--edge);
+  bottom: 18px;
+}
+
+.track {
+  position: relative;
+  margin: 0;
+}
+
+.track svg {
+  display: block;
+  width: 100%;
+  height: 40px;
+}
+
+.track rect {
+  fill: rgba(242, 242, 238, 0.2);
+}
+
+.track rect.k-h {
+  fill: rgba(242, 242, 238, 0.55);
+}
+
+.track rect.k-i {
+  fill: rgba(242, 242, 238, 0.4);
+}
+
+.track rect.k-c {
+  fill: rgba(242, 242, 238, 0.3);
+}
+
+.track rect.tick.is-full {
+  fill: var(--full);
+}
+
+.track rect.tick.is-part {
+  fill: var(--part);
+}
+
+.track rect.tick.is-none {
+  fill: var(--ink-3);
+}
+
+.track figcaption {
+  font-family: var(--cond);
+  margin-top: 6px;
+  color: var(--ink-3);
+  font-weight: 600;
+  font-stretch: 84%;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.track-now {
+  font-family: var(--cond);
+  position: absolute;
+  top: -16px;
+  left: calc(var(--x) * 100%);
+  height: 58px;
+  padding-left: 5px;
+  border-left: 2px solid var(--ink);
+  color: var(--ink);
+  font-weight: 700;
+  font-stretch: 80%;
+  font-size: 11px;
+  line-height: 1;
+  transition: left 0.6s var(--ease-out);
+}

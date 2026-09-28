@@ -37,8 +37,8 @@ export function Bug({ cues = [], current, onCue, segments, onSegment, now = -1 }
           ))}
         </div>
       )}
-      {segments && (
-        <div className="sectors" aria-label="The eleven checks">
+      {segments && onSegment && (
+        <div className="sectors" role="group" aria-label="The eleven checks">
           {segments.map((seg, i) => (
             <button
               key={seg.id}
@@ -48,8 +48,16 @@ export function Bug({ cues = [], current, onCue, segments, onSegment, now = -1 }
               style={{ "--k": i }}
               aria-label={seg.label}
               title={seg.label}
-              onClick={() => onSegment?.(i)}
+              onClick={() => onSegment(i)}
             />
+          ))}
+        </div>
+      )}
+      {segments && !onSegment && (
+        // Without a jump to make, the strip is a picture, not a row of controls.
+        <div className="sectors" aria-hidden="true">
+          {segments.map((seg, i) => (
+            <span key={seg.id} className="seg" data-tone={seg.tone} style={{ "--k": i }} />
           ))}
         </div>
       )}
@@ -114,7 +122,7 @@ function TowerRow({ row, i }) {
           {body}
         </button>
       ) : (
-        <div className="row-in" aria-label={row.aria}>
+        <div className="row-in">
           {body}
         </div>
       )}

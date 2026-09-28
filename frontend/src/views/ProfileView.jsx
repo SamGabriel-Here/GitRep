@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import Stage, { scrollToScreen } from "../components/Stage";
+import Stage from "../components/Stage";
+import { scrollToScreen } from "../lib/scroll";
 import { Bug, GradeStrap, NameStrap, Third, Tower } from "../components/broadcast";
 import { useCountUp } from "../hooks/useCountUp";
 import { shortName } from "../lib/format";

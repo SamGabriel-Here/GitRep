@@ -133,8 +133,9 @@ export function starter(check, report) {
       return {
         file: "LICENSE",
         lines: [],
-        href: gh(repo, `community/license/new?branch=${branch}&template=mit`),
-        action: "Pick a license on GitHub",
+        note: "Name the new file LICENSE and GitHub offers its license templates.",
+        href: gh(repo, `new/${branch}?filename=LICENSE`),
+        action: "Add a license on GitHub",
       };
     case "homepage": {
       const found = check.evidence?.find((mark) => mark.url);
@@ -167,6 +168,8 @@ export function evidenceHunks(text, checks, context = 2) {
   const marks = new Map();
   for (const check of checks) {
     for (const mark of check.evidence ?? []) {
+      // The README arrives capped; a line past the cap has nothing to show.
+      if (mark.line > lines.length) continue;
       if (!marks.has(mark.line)) marks.set(mark.line, []);
       const list = marks.get(mark.line);
       if (!list.some((c) => c.id === check.id)) list.push(check);

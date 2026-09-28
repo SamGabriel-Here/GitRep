@@ -415,7 +415,7 @@ in a row costs one GitHub request rather than four.
 │       │                  lower third, track map, straps, badge panel)
 │       ├── hooks/          useMedia, useCountUp
 │       ├── lib/            API client and routes, rubric knowledge and starters, formatters
-│       └── styles/         tokens.css (the design tokens), app.css
+│       └── styles/         tokens.css (the design tokens), then frame, graphics, pages
 ├── docs/                   the logo and the screenshots used by this README
 ├── DESIGN.md               the design system contract
 ├── PRODUCT.md              who it is for and what it has to do

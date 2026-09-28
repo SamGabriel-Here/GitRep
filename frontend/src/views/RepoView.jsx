@@ -1,5 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import Stage, { scrollToScreen } from "../components/Stage";
+import Stage from "../components/Stage";
+import { scrollToScreen } from "../lib/scroll";
 import { BadgePanel, Bug, Evidence, GradeStrap, NameStrap, SectorBoxes, Starter, Third, Tower, TrackMap } from "../components/broadcast";
 import { useCountUp } from "../hooks/useCountUp";
 import { ago, compact, licence, shortName, verdict } from "../lib/format";
@@ -99,6 +100,7 @@ export default function RepoView({ report, wide, calm, onGo }) {
   const seen = new Set();
   for (const c of checks) {
     for (const mark of c.evidence ?? []) {
+      if (mark.line > shape.length) continue;
       const key = `${mark.line}-${c.status}`;
       if (!seen.has(key)) {
         seen.add(key);
@@ -170,6 +172,7 @@ export default function RepoView({ report, wide, calm, onGo }) {
         <section className="flow-section">
           <h2 className="closer">Where it found the evidence</h2>
           <Evidence hunks={hunks} />
+          {report.readme?.truncated && <p className="note">This README runs past 1,500 lines; evidence after that is not shown.</p>}
         </section>
         <section className="flow-section">{badge}</section>
       </div>
@@ -202,7 +205,7 @@ export default function RepoView({ report, wide, calm, onGo }) {
           <CheckThird check={card} index={pos.card} report={report} />
         </div>
       </div>
-      <ReadmeLayer hunks={hunks} span={`${README[0]} ${README[1]}`} />
+      <ReadmeLayer hunks={hunks} truncated={report.readme?.truncated} span={`${README[0]} ${README[1]}`} />
       <section className="layer badge-layer wipe" data-span={`${BADGE[0]} ${BADGE[1]}`}>
         {badge}
       </section>
@@ -233,7 +236,7 @@ function Footage({ text, line, span }) {
 }
 
 // The evidence hunks, scrolled by the stage as the reader scrolls.
-function ReadmeLayer({ hunks, span }) {
+function ReadmeLayer({ hunks, truncated, span }) {
   const track = useRef(null);
   const [travel, setTravel] = useState(0);
 
@@ -251,7 +254,10 @@ function ReadmeLayer({ hunks, span }) {
     <section className="layer readme-layer wipe" data-span={span}>
       <header>
         <h2 className="closer">Where it found the evidence</h2>
-        <p>Every README line GitRep credited, tagged with the check it earned. Everything else is skipped.</p>
+        <p>
+          Every README line GitRep credited, tagged with the check it earned. Everything else is skipped.
+          {truncated && " This README runs past 1,500 lines; evidence after that is not shown."}
+        </p>
       </header>
       <div className="evidence-window">
         <div className="evidence-track" ref={track} style={{ "--travel": `${travel}px` }}>
