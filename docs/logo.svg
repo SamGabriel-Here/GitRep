@@ -1,16 +1,52 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="GitRep">
   <title>GitRep</title>
+  <style>
+    /* The ledger tallies once: each row inks in left to right, the leader dots
+       tick in, then the total rule settles. Only the start is held, so once
+       written it is the plain mark. --at is each stroke's start and --dur its
+       length, in ms. */
+    .ink {
+      animation: ink calc(var(--dur) * 1ms) cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--at) * 1ms + 300ms) backwards;
+    }
+    .total { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+    .dot {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: dot 140ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--at) * 1ms + 300ms) backwards;
+    }
+    @keyframes ink {
+      from { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+      15% { opacity: 1; }
+      to { stroke-dasharray: 1; stroke-dashoffset: 0; }
+    }
+    @keyframes dot {
+      from { opacity: 0; transform: scale(0.4); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ink, .dot { animation: none; }
+    }
+  </style>
   <rect x=".75" y=".75" width="62.5" height="62.5" rx="14" fill="#1C2119"
         stroke="#E9EAE6" stroke-opacity=".18" stroke-width="1.5"/>
   <g fill="none" stroke-linecap="round">
-    <path d="M16 23h11" stroke="#E9EAE6" stroke-width="4"/>
-    <path d="M32 23h8" stroke="#E9EAE6" stroke-width="2.4" stroke-dasharray="0.1 3.6" opacity=".5"/>
-    <path d="M44.5 23h3.5" stroke="#E9EAE6" stroke-width="4"/>
+    <path class="ink" d="M16 23h11" stroke="#E9EAE6" stroke-width="4" pathLength="1" style="--at: 0; --dur: 180"/>
+    <path class="ink" d="M44.5 23h3.5" stroke="#E9EAE6" stroke-width="4" pathLength="1" style="--at: 280; --dur: 130"/>
 
-    <path d="M16 34h7" stroke="#E9EAE6" stroke-width="4"/>
-    <path d="M28 34h12" stroke="#E9EAE6" stroke-width="2.4" stroke-dasharray="0.1 3.6" opacity=".5"/>
-    <path d="M44.5 34h3.5" stroke="#E2705A" stroke-width="4"/>
+    <path class="ink" d="M16 34h7" stroke="#E9EAE6" stroke-width="4" pathLength="1" style="--at: 380; --dur: 150"/>
+    <path class="ink" d="M44.5 34h3.5" stroke="#E2705A" stroke-width="4" pathLength="1" style="--at: 650; --dur: 130"/>
 
-    <path d="M16 46h32" stroke="#E9EAE6" stroke-width="5"/>
+    <path class="ink total" d="M16 46h32" stroke="#E9EAE6" stroke-width="5" pathLength="1" style="--at: 760; --dur: 340"/>
+  </g>
+  <!-- The dotted leaders, one dot per path so each can tick in. Each keeps the
+       original dash pattern and its own opacity, or it renders a shade off. -->
+  <g fill="none" stroke="#E9EAE6" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6">
+    <path class="dot" d="M32 23h.1" opacity=".5" style="--at: 150"/>
+    <path class="dot" d="M35.7 23h.1" opacity=".5" style="--at: 190"/>
+    <path class="dot" d="M39.4 23h.1" opacity=".5" style="--at: 230"/>
+
+    <path class="dot" d="M28 34h.1" opacity=".5" style="--at: 480"/>
+    <path class="dot" d="M31.7 34h.1" opacity=".5" style="--at: 520"/>
+    <path class="dot" d="M35.4 34h.1" opacity=".5" style="--at: 560"/>
+    <path class="dot" d="M39.1 34h.1" opacity=".5" style="--at: 600"/>
   </g>
 </svg>
